@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-
 using namespace std;
 
 enum CarrierType { CTGenerator = 'G', CTConsumer = 'C', CTBus = 'B' };
