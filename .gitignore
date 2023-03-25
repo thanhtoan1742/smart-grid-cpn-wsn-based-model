@@ -1,3 +1,5 @@
 .vscode/
-main
-main.exe
+.cache/
+
+build/
+compile_commands.json
