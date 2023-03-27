@@ -9,9 +9,9 @@
 #include "CircuitBreaker.h"
 #include "State.h"
 
-int sumKeeping(std::vector<Carrier> const &cars) {
+int sumKeeping(std::vector<Carrier> const& cars) {
   int sum = 0;
-  for (auto const &car : cars)
+  for (auto const& car : cars)
     sum += car.keeping;
   return sum;
 }
@@ -24,7 +24,7 @@ int main() {
   s.cbs.emplace_back(s.cbs.size(), 1, 0, 1000, 5);
 
   std::cout << "id:keeping:used\n";
-  std::stack<State> q;
+  std::stack<State>     q;
   std::set<std::string> inQueue;
 
   q.push(s);
@@ -37,7 +37,7 @@ int main() {
       std::cout << " ";
     std::cout << s.toString() << "\n";
 
-    for (auto &ns : s.generateNextStates()) {
+    for (auto& ns : s.generateNextStates()) {
       if (sumKeeping(ns.cars) > 1000)
         continue;
       std::string str = ns.toString();
