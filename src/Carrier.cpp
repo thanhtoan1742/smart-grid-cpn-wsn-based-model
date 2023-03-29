@@ -1,7 +1,8 @@
 #include "Carrier.h"
+#include "Power.h"
 
 Carrier::Carrier(
-    int _id, CarrierType _ct, int _capacity, int _keeping, int _used
+    int _id, CarrierType _ct, Power _capacity, Power _keeping, Power _used
 )
     : id{_id}, ct{_ct}, capacity{_capacity}, keeping{_keeping}, used{_used} {
 }

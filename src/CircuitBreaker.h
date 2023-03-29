@@ -1,14 +1,19 @@
 #ifndef CIRCUIT_BREAKER_H
 #define CIRCUIT_BREAKER_H
 
-struct CircuitBreaker {
-  int const id;
-  int const inp;
-  int const out;
-  int const capacity;
-  int const loss;
+#include "Percentage.h"
+#include "Power.h"
 
-  CircuitBreaker(int id, int inp, int out, int capacit = 0, int loss = 0);
+struct CircuitBreaker {
+  int const        id;
+  int const        inp;
+  int const        out;
+  Power const      capacity;
+  Percentage const loss;
+
+  CircuitBreaker(
+      int id, int inp, int out, Power capacity = 0, Percentage loss = 0
+  );
 };
 
 #endif // CIRCUIT_BREAKER_H

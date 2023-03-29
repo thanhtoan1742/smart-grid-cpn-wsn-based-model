@@ -1,22 +1,28 @@
-#include "State.h"
+#include <algorithm>
+
 #include "Carrier.h"
+#include "State.h"
 
-int withLoss(int amount, int loss) {
-  // floor(amount * (100 + loss)/100)
-  return (amount * (100 + loss) + 99) / 100;
+State::State(): depth{0} {
 }
 
-State::State() : depth(0) {
+State::State(State const& o): cars{o.cars}, cbs{o.cbs}, depth{o.depth} {
 }
+
 State::State(
     std::vector<Carrier> const&        _cars,
     std::vector<CircuitBreaker> const& _cbs,
     int                                _depth
 )
-    : cars(_cars), cbs(_cbs), depth(_depth) {
+    : cars{_cars}, cbs{_cbs}, depth{_depth} {
 }
-State::State(State const& original)
-    : cars(original.cars), cbs(original.cbs), depth(original.depth) {
+
+State::State(
+    std::vector<Carrier> const&&        _cars,
+    std::vector<CircuitBreaker> const&& _cbs,
+    int                                 _depth
+)
+    : cars{_cars}, cbs{_cbs}, depth{_depth} {
 }
 
 State State::demand(int idx) const& {
@@ -33,10 +39,10 @@ State State::demand(int idx) const& {
 State State::fulfill(int idx) const& {
   State ns(*this);
 
-  Carrier& car    = ns.cars[idx];
-  int      amount = std::max(0, std::min(car.keeping, car.capacity - car.used));
-  car.used        += amount;
-  car.keeping     -= amount;
+  Carrier& car = ns.cars[idx];
+  int amount   = std::max(0_pu, std::min(car.keeping, car.capacity - car.used));
+  car.used     += amount;
+  car.keeping  -= amount;
 
   return ns;
 }
@@ -45,31 +51,11 @@ std::vector<State> State::transmit(int idx) const& {
   std::vector<State> nss;
   int                inp = cbs[idx].inp;
   int                out = cbs[idx].out;
-
-  for (int amount = 1; amount <= cars[inp].keeping; ++amount) {
+  for (Power amount{1}; amount <= cars[inp].keeping; amount += 1_pu) {
     State ns(*this);
     ns.cars[inp].keeping -= amount;
-    int amountWithLoss   = withLoss(amount, cbs[idx].loss);
-    ns.cars[out].keeping += amountWithLoss;
+    ns.cars[out].keeping += amount.compensateLoss(cbs[idx].loss);
     nss.push_back(ns);
-  }
-
-  return nss;
-}
-
-std::vector<State> State::generateNextStates() const& {
-  std::vector<State> nss;
-  for (int i = 0; i < cars.size(); ++i) {
-    if (cars[i].ct == CarrierType::Consumer)
-      nss.push_back(demand(i));
-    if (cars[i].ct == CarrierType::Generator)
-      nss.push_back(fulfill(i));
-  }
-
-  for (int i = 0; i < cbs.size(); ++i) {
-    auto transmitNss = transmit(i);
-    for (auto const& s : transmitNss)
-      nss.push_back(s);
   }
 
   return nss;
