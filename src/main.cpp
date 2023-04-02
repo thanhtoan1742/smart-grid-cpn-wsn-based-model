@@ -6,32 +6,31 @@
 #include <vector>
 
 #include "Carrier.h"
+#include "CarrierState.h"
 #include "CircuitBreaker.h"
 #include "Percentage.h"
 #include "Power.h"
 #include "State.h"
+#include "StateExplorer.h"
+#include "utils.h"
 
-int sumKeeping(std::vector<Carrier> const& cars) {
-  int sum = 0;
-  for (auto const& car : cars)
-    sum += car.keeping;
-  return sum;
+void test(CarrierState&& ct) {
 }
 
 int main() {
-  State s = State {
+
+  auto grid = Grid{
       {
-       Carrier(0, CarrierType::Consumer, 200),
-       Carrier(1, CarrierType::Generator, 300),
+       Carrier(0, CarrierType::Consumer, 20),
+       Carrier(1, CarrierType::Generator, 30),
        },
       {
        CircuitBreaker(0, 0, 1, 1000, 5),
-       CircuitBreaker(1, 0, 1, 1000, 5),
-       },
-  }.demand(0);
+       CircuitBreaker(1, 1, 0, 1000, 5),
+       }
+  };
+  StateExplorer stateExplorer(&grid, State(&grid));
 
-  std::cout << s.toString() << "\n";
-  for (auto ns: s.generateNextStates()) {
-    std::cout << ns.toString() << "\n";
-  }
+  stateExplorer.generateStateSpace();
+  // stateExplorer.prettyPrint();
 }
