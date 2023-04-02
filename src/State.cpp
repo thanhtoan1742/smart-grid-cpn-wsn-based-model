@@ -1,83 +1,122 @@
 #include "State.h"
+
+#include <iterator>
+#include <unordered_set>
+
 #include "Carrier.h"
+#include "CarrierState.h"
+#include "Percentage.h"
+#include "Power.h"
+#include "utils.h"
 
-int withLoss(int amount, int loss) {
-  // floor(amount * (100 + loss)/100)
-  return (amount * (100 + loss) + 99) / 100;
+State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
+  for (Carrier& car: grid->cars)
+    carStates.emplace_back(&car);
 }
 
-State::State() : depth(0) {
-}
-State::State(
-    std::vector<Carrier> const&        _cars,
-    std::vector<CircuitBreaker> const& _cbs,
-    int                                _depth
-)
-    : cars(_cars), cbs(_cbs), depth(_depth) {
-}
-State::State(State const& original)
-    : cars(original.cars), cbs(original.cbs), depth(original.depth) {
+State::State(Grid* _grid, std::vector<CarrierState> const& _carStates)
+    : grid(_grid), carStates(_carStates) {
 }
 
-State State::demand(int idx) const& {
-  State ns(*this);
-
-  Carrier& car    = ns.cars[idx];
-  int      amount = car.capacity - car.used;
-  car.keeping     += amount;
-  car.used        += amount;
-
-  return ns;
+bool State::operator==(State const& other) const& {
+  if (carStates.size() != other.carStates.size())
+    return false;
+  for (int i = 0; i < carStates.size(); ++i)
+    if (carStates[i] != other.carStates[i])
+      return false;
+  return true;
 }
 
-State State::fulfill(int idx) const& {
-  State ns(*this);
-
-  Carrier& car    = ns.cars[idx];
-  int      amount = std::max(0, std::min(car.keeping, car.capacity - car.used));
-  car.used        += amount;
-  car.keeping     -= amount;
-
-  return ns;
-}
-
-std::vector<State> State::transmit(int idx) const& {
-  std::vector<State> nss;
-  int                inp = cbs[idx].inp;
-  int                out = cbs[idx].out;
-
-  for (int amount = 1; amount <= cars[inp].keeping; ++amount) {
-    State ns(*this);
-    ns.cars[inp].keeping -= amount;
-    int amountWithLoss   = withLoss(amount, cbs[idx].loss);
-    ns.cars[out].keeping += amountWithLoss;
-    nss.push_back(ns);
+bool State::satisfied() const& {
+  for (int i = 0; i < grid->cars.size(); ++i) {
+    Carrier const& car = grid->cars[i];
+    if (car.ct == CarrierType::Consumer && carStates[i].used < car.capacity)
+      return false;
+    if (carStates[i].keeping != 0)
+      return false;
   }
+  return true;
+}
 
-  return nss;
+Power State::notDemaned() const& {
+  Power res(0);
+  for (int i = 0; i < grid->cars.size(); ++i)
+    if (grid->cars[i].ct == CarrierType::Consumer)
+      res += grid->cars[i].capacity - carStates[i].used;
+  return res;
+}
+
+Power State::fulfilled() const& {
+  Power res(0);
+  for (int i = 0; i < grid->cars.size(); ++i)
+    if (grid->cars[i].ct == CarrierType::Generator)
+      res += carStates[i].used;
+  return res;
+}
+
+Power State::keeping() const& {
+  Power res(0);
+  for (auto const& carState: carStates)
+    res += carState.keeping;
+  return res;
+}
+
+State State::createChildState(int idx, CarrierState const& newCarState) const& {
+  std::vector<CarrierState> newCarStates(carStates);
+  newCarStates[idx] = std::move(newCarState);
+  return State(grid, newCarStates);
 }
 
 std::vector<State> State::generateNextStates() const& {
-  std::vector<State> nss;
-  for (int i = 0; i < cars.size(); ++i) {
-    if (cars[i].ct == CarrierType::Consumer)
-      nss.push_back(demand(i));
-    if (cars[i].ct == CarrierType::Generator)
-      nss.push_back(fulfill(i));
+  std::unordered_set<State> uniqueStates;
+  for (int i = 0; i < grid->cars.size(); ++i) {
+    if (grid->cars[i].ct == CarrierType::Generator) {
+      uniqueStates.insert(createChildState(i, carStates[i].fulfill()));
+      // debug("  GNS: fulfill: size", uniqueStates.size());
+    }
+    if (grid->cars[i].ct == CarrierType::Consumer) {
+      uniqueStates.insert(createChildState(i, carStates[i].demand()));
+      // debug("  GNS: demand: size", uniqueStates.size());
+    }
   }
 
-  for (int i = 0; i < cbs.size(); ++i) {
-    auto transmitNss = transmit(i);
-    for (auto const& s : transmitNss)
-      nss.push_back(s);
+  for (int i = 0; i < grid->cbs.size(); ++i) {
+    i32        inp  = grid->cbs[i].inp;
+    i32        out  = grid->cbs[i].out;
+    Percentage loss = grid->cbs[i].loss;
+
+    Power maxAmount = std::min(carStates[inp].keeping, grid->cbs[i].capacity);
+    for (Power amount = maxAmount; amount > 0_pu; amount -= 1) {
+      State nextState(*this);
+      nextState.carStates[inp] = nextState.carStates[inp].send(amount);
+      nextState.carStates[out] =
+          nextState.carStates[out].receive(amount.compensateLoss(loss));
+      // debug(nextState);
+      uniqueStates.insert(nextState);
+      // debug("  GNS: transmit: size", uniqueStates.size());
+    }
   }
 
-  return nss;
+  return std::vector<State>(
+      std::make_move_iterator(uniqueStates.begin()),
+      std::make_move_iterator(uniqueStates.end())
+  );
 }
 
 std::string State::toString() const& {
-  std::string str = "";
-  for (auto const& car : cars)
-    str += car.toString() + " ";
+  if (carStates.empty())
+    return "[]";
+  std::string str = "[";
+  for (auto const& carState: carStates)
+    str += carState.toString() + " ";
+  str[str.size() - 1] = ']';
   return str;
+}
+
+std::size_t std::hash<State>::operator()(State const& state) const noexcept {
+  std::string str;
+  for (auto const& carState: state.carStates)
+    str += std::to_string(carState.keeping) + ":" +
+           std::to_string(carState.used) + " ";
+  return std::hash<std::string>()(str);
 }

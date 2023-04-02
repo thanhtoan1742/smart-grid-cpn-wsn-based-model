@@ -1,14 +1,24 @@
 #ifndef CIRCUIT_BREAKER_H
 #define CIRCUIT_BREAKER_H
 
-struct CircuitBreaker {
-  int const id;
-  int const inp;
-  int const out;
-  int const capacity;
-  int const loss;
+#include <string>
 
-  CircuitBreaker(int id, int inp, int out, int capacit = 0, int loss = 0);
+#include "Percentage.h"
+#include "Power.h"
+#include "Types.h"
+
+struct CircuitBreaker {
+  i32        id;
+  i32        inp;
+  i32        out;
+  Power      capacity;
+  Percentage loss;
+
+  CircuitBreaker(
+      int id, int inp, int out, Power capacity = 0, Percentage loss = 0
+  );
+
+  std::string toString() const&;
 };
 
 #endif // CIRCUIT_BREAKER_H

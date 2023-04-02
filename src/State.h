@@ -1,30 +1,41 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <cstddef>
+#include <functional>
+#include <ostream>
 #include <string>
-#include <vector>
 
-#include "Carrier.h"
-#include "CircuitBreaker.h"
+#include "CarrierState.h"
+#include "Grid.h"
 
 struct State {
-  std::vector<Carrier>        cars;
-  std::vector<CircuitBreaker> cbs;
-  int                         depth;
+  Grid*                     grid;
+  std::vector<CarrierState> carStates;
 
-  State();
-  State(
-      std::vector<Carrier> const&        cars,
-      std::vector<CircuitBreaker> const& cbs,
-      int                                depth = 0
-  );
-  State(State const& original);
+  i32                 depth;
+  State*              parent;
+  std::vector<State*> children;
 
-  State              demand(int idx) const&;
-  State              fulfill(int idx) const&;
-  std::vector<State> transmit(int idx) const&;
+  State(Grid* grid);
+  State(Grid* grid, std::vector<CarrierState> const& carState);
+
+  bool operator==(State const& other) const&;
+
+  bool  satisfied() const&;
+  Power notDemaned() const&;
+  Power fulfilled() const&;
+  Power keeping() const&;
+
+  State createChildState(int idx, CarrierState const& carState) const&;
   std::vector<State> generateNextStates() const&;
-  std::string        toString() const&;
+
+  std::string toString() const&;
+};
+
+template <>
+struct std::hash<State> {
+  size_t operator()(State const& state) const noexcept;
 };
 
 #endif // STATE_H

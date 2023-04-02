@@ -3,18 +3,18 @@
 
 #include <string>
 
+#include "Power.h"
+#include "Types.h"
+
 enum struct CarrierType { Generator = 'G', Consumer = 'C', Bus = 'B' };
 
 struct Carrier {
-  int const         id;
-  CarrierType const ct;
-  int const         capacity;
-  int               keeping;
-  int               used;
+  i32         id;
+  CarrierType ct;
+  Power       capacity;
 
-  Carrier(
-      int id, CarrierType ct, int capacity = 0, int keeping = 0, int used = 0
-  );
+  Carrier(i32 id, CarrierType ct, Power capacity = 0);
+
   std::string toString() const&;
 };
 
