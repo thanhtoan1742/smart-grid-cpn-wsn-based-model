@@ -16,7 +16,7 @@ Power Power::operator-(Power const& other) const& {
 }
 
 Power Power::operator*(Percentage const& percentage) const& {
-  return value * percentage / 100;
+  return (value * percentage + 99) / 100;
 }
 
 void Power::operator+=(Power const& other) & {
@@ -28,7 +28,7 @@ void Power::operator-=(Power const& other) & {
 }
 
 void Power::operator*=(Percentage const& percentage) & {
-  value = value * static_cast<u64>(percentage) / 100;
+  value = (value * percentage);
 }
 
 bool Power::operator<(Power const& other) const& {
@@ -36,7 +36,7 @@ bool Power::operator<(Power const& other) const& {
 }
 
 Power Power::compensateLoss(Percentage const& percentage) const& {
-  return (*this) + std::max(1_pu, (*this) * percentage);
+  return (*this) * (100_pct + percentage);
 }
 
 Power::operator u64() const& {

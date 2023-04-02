@@ -21,16 +21,17 @@ int main() {
 
   auto grid = Grid{
       {
-       Carrier(0, CarrierType::Consumer, 20),
-       Carrier(1, CarrierType::Generator, 30),
+       Carrier(0, CarrierType::Consumer, 200),
+       Carrier(1, CarrierType::Generator, 300),
        },
       {
-       CircuitBreaker(0, 0, 1, 1000, 5),
-       CircuitBreaker(1, 1, 0, 1000, 5),
+       CircuitBreaker(0, 0, 1, 1000, 0),
+       CircuitBreaker(1, 1, 0, 1000, 0),
        }
   };
   StateExplorer stateExplorer(&grid, State(&grid));
 
   stateExplorer.generateStateSpace();
   // stateExplorer.prettyPrint();
+  stateExplorer.prettyPrintBestStateTrace();
 }

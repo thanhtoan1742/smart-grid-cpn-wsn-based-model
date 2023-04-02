@@ -86,7 +86,7 @@ std::vector<State> State::generateNextStates() const& {
     Percentage loss = grid->cbs[i].loss;
 
     Power maxAmount = std::min(carStates[inp].keeping, grid->cbs[i].capacity);
-    for (Power amount = 1_pu; amount <= maxAmount; amount += 1) {
+    for (Power amount = maxAmount; amount > 0_pu; amount -= 1) {
       State nextState(*this);
       nextState.carStates[inp] = nextState.carStates[inp].send(amount);
       nextState.carStates[out] =

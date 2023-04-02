@@ -30,7 +30,10 @@ struct CompareState {
 
     Power fulfilledA = a->fulfilled();
     Power fulfilledB = b->fulfilled();
-    return fulfilledA > fulfilledB;
+    if (fulfilledA != fulfilledB)
+      return fulfilledA > fulfilledB;
+
+    return a->depth > b->depth;
   }
 };
 
@@ -47,11 +50,12 @@ void StateExplorer::generateStateSpace() {
     State* currentState = q.top();
     q.pop();
     debug("PROCESSING STATE", currentState->toString());
-    if (currentState->keeping() + currentState->fulfilled() > minFulfilled)
+    if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
     if (currentState->satisfied()) {
       debug("SATISFIED STATE", currentState->toString());
-      minFulfilled = std::min(minFulfilled, currentState->fulfilled());
+      minFulfilled = currentState->fulfilled();
+      bestState    = currentState;
       continue;
     }
     // debug("NEXT STATES SIZE", currentState->generateNextStates().size());
@@ -71,12 +75,15 @@ void StateExplorer::generateStateSpace() {
   }
 }
 
-void prettyPrintRec(State const& state) {
+void prettyPrintState(State const& state) {
   for (int i = 0; i < state.depth; ++i)
     std::cout << " ";
   std::cout << state.toString() << " ";
   std::cout << std::endl;
+}
 
+void prettyPrintRec(State const& state) {
+  prettyPrintState(state);
   for (State* child: state.children)
     prettyPrintRec(*child);
 }
@@ -85,4 +92,12 @@ void StateExplorer::prettyPrint() const& {
   if (stateSpace.empty())
     return;
   prettyPrintRec(*stateSpace[0]);
+}
+
+void StateExplorer::prettyPrintBestStateTrace() const& {
+  State* current = bestState;
+  while (current != nullptr) {
+    prettyPrintState(*current);
+    current = current->parent;
+  }
 }
