@@ -1,8 +1,9 @@
 #include "CircuitBreaker.h"
 
+#include <string>
+
 #include "Percentage.h"
 #include "Power.h"
-#include <string>
 
 CircuitBreaker::CircuitBreaker(
     i32 _id, i32 _inp, i32 _out, Power _capacity, Percentage _loss
