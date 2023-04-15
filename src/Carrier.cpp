@@ -1,6 +1,8 @@
 #include "Carrier.h"
-#include "Power.h"
+
 #include <string>
+
+#include "Power.h"
 
 Carrier::Carrier(i32 _id, CarrierType _ct, Power _capacity)
     : id{_id}, ct{_ct}, capacity{_capacity} {

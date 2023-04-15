@@ -49,7 +49,7 @@ void StateExplorer::generateStateSpace() {
   while (!q.empty()) {
     State* currentState = q.top();
     q.pop();
-    debug("PROCESSING STATE", currentState->toString());
+    // debug("PROCESSING STATE", currentState->toString());
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
     if (currentState->satisfied()) {

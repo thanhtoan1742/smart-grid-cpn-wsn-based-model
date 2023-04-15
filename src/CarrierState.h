@@ -1,10 +1,11 @@
 #ifndef CARRIER_STATE_H
 #define CARRIER_STATE_H
 
+#include <functional>
+
 #include "Carrier.h"
 #include "Percentage.h"
 #include "Power.h"
-#include <functional>
 
 struct CarrierState {
   static Power const maxKeeping;

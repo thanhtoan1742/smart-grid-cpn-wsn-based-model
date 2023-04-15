@@ -1,6 +1,8 @@
 #include "CarrierState.h"
-#include "Carrier.h"
+
 #include <string>
+
+#include "Carrier.h"
 
 Power const CarrierState::maxKeeping(400);
 
