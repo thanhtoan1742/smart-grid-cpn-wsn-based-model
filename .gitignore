@@ -1,5 +1,7 @@
 .vscode/
 .cache/
 
+docs/pdf/
+
 build/
 compile_commands.json
