@@ -54,6 +54,14 @@ Power State::fulfilled() const& {
   return res;
 }
 
+Power State::need_fulfilled() const& {
+  Power res(0);
+  for (int i = 0; i < grid->cars.size(); ++i)
+    if (grid->cars[i].ct == CarrierType::Generator)
+      res += carStates[i].keeping - carStates[i].used;
+  return res;
+}
+
 Power State::keeping() const& {
   Power res(0);
   for (auto const& carState: carStates)

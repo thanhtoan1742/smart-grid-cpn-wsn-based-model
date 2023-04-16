@@ -25,6 +25,7 @@ struct State {
   bool  satisfied() const&;
   Power notDemaned() const&;
   Power fulfilled() const&;
+  Power need_fulfilled() const&;
   Power keeping() const&;
 
   State createChildState(int idx, CarrierState const& carState) const&;

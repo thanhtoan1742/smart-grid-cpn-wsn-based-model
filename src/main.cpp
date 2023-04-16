@@ -35,6 +35,19 @@ int main() {
        CircuitBreaker(5, 3, 0, 1000, 2),
        }
   };
+  // auto grid = Grid{
+  //     {
+  //      Carrier(0, CarrierType::Consumer, 5),
+  //      Carrier(1, CarrierType::Generator, 10),
+  //      Carrier(2, CarrierType::Bus),
+  //      },
+  //     {
+  //      CircuitBreaker(0, 1, 2, 1000, 5),
+  //      CircuitBreaker(1, 2, 1, 1000, 5),
+  //      CircuitBreaker(2, 2, 0, 1000, 3),
+  //      CircuitBreaker(3, 0, 2, 1000, 3),
+  //      }
+  // };
   StateExplorer stateExplorer(&grid, State(&grid));
 
   stateExplorer.generateStateSpace();
