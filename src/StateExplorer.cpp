@@ -18,18 +18,21 @@ StateExplorer::StateExplorer(Grid* _grid, State const& _initState)
 struct CompareState {
   // return true means priorize b, false means prioritize a.
   bool operator()(State const* a, State const* b) {
+
     // debug("COMPARING", a->toString(), " and ", b->toString());
     Power notDemandedA = a->notDemaned();
     Power notDemamdedB = b->notDemaned();
     if (notDemandedA != notDemamdedB){
       // debug("Demanded:", notDemandedA, " and ", notDemamdedB);
-      return notDemandedA < notDemamdedB;
+      return notDemandedA > notDemamdedB;
     }
 
-    Power keepingA = a->keeping();
-    Power keepingB = b->keeping();
+    Power keepingA = a->keeping() + a->fulfilled();
+    Power keepingB = b->keeping() + b->fulfilled() ;
     if (keepingA != keepingB)
       return keepingA > keepingB;
+
+    
 
     Power fulfilledA = a->need_fulfilled();
     Power fulfilledB = b->need_fulfilled();
@@ -54,11 +57,13 @@ void StateExplorer::generateStateSpace() {
   while (!q.empty()) {
     State* currentState = q.top();
     q.pop();
-    if (currentState->parent != nullptr)
+    if (currentState->parent != nullptr 
+    // && currentState->keeping() + currentState->fulfilled() == 23
+    )
       debug("PROCESSING STATE",currentState->parent->toString(), " ---> ", currentState->toString(), " | ", currentState->keeping() + currentState->fulfilled());
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
-    // if (currentState->depth == 5){
+    // if (currentState->depth == 4){
     //   break;
     // }
     if (currentState->satisfied()) {
@@ -80,6 +85,7 @@ void StateExplorer::generateStateSpace() {
       currentState->children.push_back(nextStatePtr);
       nextStatePtr->parent = currentState;
       nextStatePtr->depth  = currentState->depth + 1;
+      // if (currentState->toString() == "[0:10 0:10 0:0 10:0 0:0 13:0 0:0 0:0]")
       // debug("GEN STATE", currentState->toString(), " --> ", nextStatePtr->toString(), " | ", nextStatePtr->keeping() + nextStatePtr->fulfilled());
 
     }

@@ -1,6 +1,7 @@
 #include "State.h"
 
 #include <iterator>
+#include <string>
 #include <unordered_set>
 
 #include "Carrier.h"
@@ -57,8 +58,10 @@ Power State::fulfilled() const& {
 Power State::need_fulfilled() const& {
   Power res(0);
   for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].ct == CarrierType::Generator)
-      res += carStates[i].keeping - carStates[i].used;
+    if (grid->cars[i].ct == CarrierType::Generator){
+      Power need = grid->cars[i].capacity - carStates[i].used;
+      res += std::max(0_pu, carStates[i].keeping - need);
+    }
   return res;
 }
 
@@ -94,7 +97,9 @@ std::vector<State> State::generateNextStates() const& {
     Percentage loss = grid->cbs[i].loss;
 
     Power maxAmount = std::min(carStates[inp].keeping, grid->cbs[i].capacity);
-    for (Power amount = maxAmount; amount > 0_pu; amount -= 1) {
+    // for (Power amount = maxAmount; amount > 0_pu; amount -= 1) 
+    Power amount = maxAmount;
+    {
       State nextState(*this);
       nextState.carStates[inp] = nextState.carStates[inp].send(amount);
       nextState.carStates[out] =
@@ -116,7 +121,7 @@ std::string State::toString() const& {
     return "[]";
   std::string str = "[";
   for (auto const& carState: carStates)
-    str += carState.toString() + " ";
+    str += std::to_string(carState.car->id) + "|" + carState.toString() + " ";
   str[str.size() - 1] = ']';
   return str;
 }
