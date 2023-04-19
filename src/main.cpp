@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "CircuitBreaker.h"
 #include "Grid.h"
 #include "Percentage.h"
 #include "Power.h"
@@ -13,6 +12,7 @@
 #include "PowerSystemState.h"
 #include "State.h"
 #include "StateExplorer.h"
+#include "TransmissionLine.h"
 #include "utils.h"
 
 void test(PowerSystemState&& ct) {
@@ -31,22 +31,22 @@ int main() {
   //      PowerSystem(7, PowerSystemType::Generator, 50),
   //      },
   //     {
-  //      CircuitBreaker(0, 0, 3, 1000, 0),
-  //      CircuitBreaker(1, 3, 0, 1000, 0),
-  //      CircuitBreaker(2, 1, 2, 1000, 0),
-  //      CircuitBreaker(3, 2, 1, 1000, 0),
-  //      CircuitBreaker(4, 3, 2, 1000, 10),
-  //      CircuitBreaker(5, 2, 3, 1000, 10),
-  //      CircuitBreaker(6, 3, 4, 1000, 10),
-  //      CircuitBreaker(7, 4, 3, 1000, 10),
-  //      CircuitBreaker(8, 2, 5, 1000, 30),
-  //      CircuitBreaker(9, 5, 2, 1000, 30),
-  //      CircuitBreaker(10, 4, 5, 1000, 10),
-  //      CircuitBreaker(11, 5, 4, 1000, 10),
-  //      CircuitBreaker(12, 5, 6, 1000, 10),
-  //      CircuitBreaker(13, 6, 5, 1000, 10),
-  //      CircuitBreaker(14, 4, 7, 1000, 20),
-  //      CircuitBreaker(15, 7, 4, 1000, 20),
+  //      TransmissionLine(0, 0, 3, 1000, 0),
+  //      TransmissionLine(1, 3, 0, 1000, 0),
+  //      TransmissionLine(2, 1, 2, 1000, 0),
+  //      TransmissionLine(3, 2, 1, 1000, 0),
+  //      TransmissionLine(4, 3, 2, 1000, 10),
+  //      TransmissionLine(5, 2, 3, 1000, 10),
+  //      TransmissionLine(6, 3, 4, 1000, 10),
+  //      TransmissionLine(7, 4, 3, 1000, 10),
+  //      TransmissionLine(8, 2, 5, 1000, 30),
+  //      TransmissionLine(9, 5, 2, 1000, 30),
+  //      TransmissionLine(10, 4, 5, 1000, 10),
+  //      TransmissionLine(11, 5, 4, 1000, 10),
+  //      TransmissionLine(12, 5, 6, 1000, 10),
+  //      TransmissionLine(13, 6, 5, 1000, 10),
+  //      TransmissionLine(14, 4, 7, 1000, 20),
+  //      TransmissionLine(15, 7, 4, 1000, 20),
   //      }
   // };
 
@@ -74,17 +74,17 @@ int main() {
        PowerSystem(9, PowerSystemType::Generator, 30),
        PowerSystem(10, PowerSystemType::Generator, 30),
        },
-      CircuitBreakerVectorFactory()
-          .addCircuitBreaker(0, 3, 1000, 5)
-          .addCircuitBreaker(3, 6, 1000, 5)
-          .addCircuitBreaker(6, 10, 1000, 5)
-          .addCircuitBreaker(3, 7, 1000, 5)
-          .addCircuitBreaker(7, 9, 1000, 5)
-          .addCircuitBreaker(7, 4, 1000, 5)
-          .addCircuitBreaker(4, 1, 1000, 5)
-          .addCircuitBreaker(4, 5, 1000, 5)
-          .addCircuitBreaker(2, 5, 1000, 5)
-          .addCircuitBreaker(8, 5, 1000, 5)
+      TransmissionLineVectorFactory()
+          .addTransmissionLine(0, 3, 1000, 5)
+          .addTransmissionLine(3, 6, 1000, 5)
+          .addTransmissionLine(6, 10, 1000, 5)
+          .addTransmissionLine(3, 7, 1000, 5)
+          .addTransmissionLine(7, 9, 1000, 5)
+          .addTransmissionLine(7, 4, 1000, 5)
+          .addTransmissionLine(4, 1, 1000, 5)
+          .addTransmissionLine(4, 5, 1000, 5)
+          .addTransmissionLine(2, 5, 1000, 5)
+          .addTransmissionLine(8, 5, 1000, 5)
           .toVector(),
   };
   StateExplorer stateExplorer(&grid, State(&grid));

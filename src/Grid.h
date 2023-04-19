@@ -4,28 +4,29 @@
 #include <string>
 #include <vector>
 
-#include "CircuitBreaker.h"
 #include "PowerSystem.h"
+#include "TransmissionLine.h"
 
 struct Grid {
-  std::vector<PowerSystem>    cars;
-  std::vector<CircuitBreaker> cbs;
+  std::vector<PowerSystem>      cars;
+  std::vector<TransmissionLine> cbs;
 
   Grid();
   Grid(
-      std::vector<PowerSystem> const&    cars,
-      std::vector<CircuitBreaker> const& cbs
+      std::vector<PowerSystem> const&      cars,
+      std::vector<TransmissionLine> const& cbs
   );
 
   std::string toString() const&;
 };
 
-struct CircuitBreakerVectorFactory {
-  std::vector<CircuitBreaker> cbs;
+struct TransmissionLineVectorFactory {
+  std::vector<TransmissionLine> cbs;
 
-  CircuitBreakerVectorFactory&
-  addCircuitBreaker(int inp, int out, Power capacity = 0, Percentage loss = 0);
-  std::vector<CircuitBreaker> toVector();
+  TransmissionLineVectorFactory& addTransmissionLine(
+      int inp, int out, Power capacity = 0, Percentage loss = 0
+  );
+  std::vector<TransmissionLine> toVector();
 };
 
 #endif // GRID_H
