@@ -7,6 +7,8 @@
 #include "Power.h"
 #include "Types.h"
 
+namespace sgrid {
+
 struct TransmissionLine {
   i32        id;
   i32        inp;
@@ -21,4 +23,5 @@ struct TransmissionLine {
   std::string toString() const&;
 };
 
+} // namespace sgrid
 #endif // CIRCUIT_BREAKER_H

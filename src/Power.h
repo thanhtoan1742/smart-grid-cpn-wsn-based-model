@@ -3,6 +3,8 @@
 
 #include "Percentage.h"
 
+namespace sgrid {
+
 struct Power {
   Power(u64 value = 0);
 
@@ -25,4 +27,5 @@ private:
 
 Power operator""_pu(u64 value);
 
+} // namespace sgrid
 #endif // POWER_H

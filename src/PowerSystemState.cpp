@@ -4,6 +4,8 @@
 
 #include "PowerSystem.h"
 
+namespace sgrid {
+
 Power const PowerSystemState::maxKeeping(400);
 
 PowerSystemState::PowerSystemState(
@@ -42,3 +44,5 @@ PowerSystemState PowerSystemState::receive(Power amount) const& {
 std::string PowerSystemState::toString() const& {
   return std::to_string(keeping) + ":" + std::to_string(used);
 }
+
+} // namespace sgrid

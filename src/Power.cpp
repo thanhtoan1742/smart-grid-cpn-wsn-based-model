@@ -4,6 +4,8 @@
 
 #include "Percentage.h"
 
+namespace sgrid {
+
 Power::Power(u64 _value): value{_value} {
 }
 
@@ -46,3 +48,5 @@ Power::operator u64() const& {
 Power operator""_pu(u64 value) {
   return Power(value);
 }
+
+} // namespace sgrid

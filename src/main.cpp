@@ -15,6 +15,8 @@
 #include "TransmissionLine.h"
 #include "utils.h"
 
+using namespace sgrid;
+
 int main() {
   // auto grid = Grid{
   //     {

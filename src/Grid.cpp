@@ -5,6 +5,8 @@
 #include "Percentage.h"
 #include "utils.h"
 
+namespace sgrid {
+
 Grid::Grid() {
 }
 
@@ -42,3 +44,5 @@ std::vector<TransmissionLine> TransmissionLineVectorFactory::toVector() {
   }
   return std::move(cbs);
 }
+
+} // namespace sgrid

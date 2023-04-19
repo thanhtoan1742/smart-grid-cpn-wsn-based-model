@@ -5,6 +5,8 @@
 #include "Percentage.h"
 #include "Power.h"
 
+namespace sgrid {
+
 TransmissionLine::TransmissionLine(
     i32 _id, i32 _inp, i32 _out, Power _capacity, Percentage _loss
 )
@@ -16,3 +18,5 @@ std::string TransmissionLine::toString() const& {
          std::to_string(capacity) + "|" + std::to_string(loss) + "->" +
          std::to_string(out);
 }
+
+} // namespace sgrid

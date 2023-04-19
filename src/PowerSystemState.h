@@ -7,6 +7,8 @@
 #include "Power.h"
 #include "PowerSystem.h"
 
+namespace sgrid {
+
 struct PowerSystemState {
   static Power const maxKeeping;
 
@@ -26,4 +28,5 @@ struct PowerSystemState {
   std::string toString() const&;
 };
 
+} // namespace sgrid
 #endif // CARRIER_STATE_H

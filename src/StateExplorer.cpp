@@ -11,6 +11,8 @@
 #include "Types.h"
 #include "utils.h"
 
+namespace sgrid {
+
 StateExplorer::StateExplorer(Grid* _grid, State const& _initState)
     : grid(_grid), initState(_initState) {
 }
@@ -124,3 +126,5 @@ void StateExplorer::prettyPrintBestStateTrace() const& {
     current = current->parent;
   }
 }
+
+} // namespace sgrid
