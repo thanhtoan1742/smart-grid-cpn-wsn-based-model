@@ -6,19 +6,19 @@
 #include <ostream>
 #include <string>
 
-#include "CarrierState.h"
 #include "Grid.h"
+#include "PowerSystemState.h"
 
 struct State {
-  Grid*                     grid;
-  std::vector<CarrierState> carStates;
+  Grid*                         grid;
+  std::vector<PowerSystemState> carStates;
 
   i32                 depth;
   State*              parent;
   std::vector<State*> children;
 
   State(Grid* grid);
-  State(Grid* grid, std::vector<CarrierState> const& carState);
+  State(Grid* grid, std::vector<PowerSystemState> const& carState);
 
   bool operator==(State const& other) const&;
 
@@ -28,7 +28,7 @@ struct State {
   Power needFulfilled() const&;
   Power keeping() const&;
 
-  State createChildState(int idx, CarrierState const& carState) const&;
+  State createChildState(int idx, PowerSystemState const& carState) const&;
   std::vector<State> generateNextStates() const&;
 
   std::string toString() const&;

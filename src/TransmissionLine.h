@@ -7,14 +7,14 @@
 #include "Power.h"
 #include "Types.h"
 
-struct CircuitBreaker {
+struct TransmissionLine {
   i32        id;
   i32        inp;
   i32        out;
   Power      capacity;
   Percentage loss;
 
-  CircuitBreaker(
+  TransmissionLine(
       int id, int inp, int out, Power capacity = 0, Percentage loss = 0
   );
 
