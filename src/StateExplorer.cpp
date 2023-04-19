@@ -18,26 +18,33 @@ StateExplorer::StateExplorer(Grid* _grid, State const& _initState)
 struct CompareState {
   // return true means priorize b, false means prioritize a.
   bool operator()(State const* a, State const* b) {
+
+    // debug("COMPARING", a->toString(), " and ", b->toString());
     Power notDemandedA = a->notDemaned();
     Power notDemamdedB = b->notDemaned();
-    if (notDemandedA != notDemamdedB)
+    if (notDemandedA != notDemamdedB) {
+      // debug("Demanded:", notDemandedA, " and ", notDemamdedB);
       return notDemandedA > notDemamdedB;
+    }
 
-    Power keepingA = a->keeping();
-    Power keepingB = b->keeping();
+    Power keepingA = a->keeping() + a->fulfilled();
+    Power keepingB = b->keeping() + b->fulfilled();
     if (keepingA != keepingB)
       return keepingA > keepingB;
 
-    Power fulfilledA = a->fulfilled();
-    Power fulfilledB = b->fulfilled();
-    if (fulfilledA != fulfilledB)
-      return fulfilledA > fulfilledB;
+    Power fulfilledA = a->needFulfilled();
+    Power fulfilledB = b->needFulfilled();
+    if (fulfilledA != fulfilledB) {
+      // debug("Fulfilled:", fulfilledA, " and ", fulfilledB);
+      return fulfilledA < fulfilledB;
+    }
 
     return a->depth > b->depth;
   }
 };
 
 void StateExplorer::generateStateSpace() {
+  bestState = nullptr;
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
 
@@ -49,14 +56,26 @@ void StateExplorer::generateStateSpace() {
   while (!q.empty()) {
     State* currentState = q.top();
     q.pop();
-    // debug("PROCESSING STATE", currentState->toString());
+    // debug(
+    //     "PROCESSING STATE",
+    //     "\n",
+    //     !currentState->parent ? "[]" : currentState->parent->toString(),
+    //     "\n",
+    //     currentState->toString(),
+    //     "\n",
+    //     currentState->keeping() + currentState->fulfilled()
+    // );
+
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
+    // if (currentState->depth == 4){
+    //   break;
+    // }
     if (currentState->satisfied()) {
-      debug("SATISFIED STATE", currentState->toString());
+      // debug("SATISFIED STATE", currentState->toString());
       minFulfilled = currentState->fulfilled();
       bestState    = currentState;
-      continue;
+      break;
     }
     // debug("NEXT STATES SIZE", currentState->generateNextStates().size());
 
@@ -71,6 +90,10 @@ void StateExplorer::generateStateSpace() {
       currentState->children.push_back(nextStatePtr);
       nextStatePtr->parent = currentState;
       nextStatePtr->depth  = currentState->depth + 1;
+      // if (currentState->toString() == "[0:10 0:10 0:0 10:0 0:0 13:0 0:0
+      // 0:0]") debug("GEN STATE", currentState->toString(), " --> ",
+      // nextStatePtr->toString(), " | ", nextStatePtr->keeping() +
+      // nextStatePtr->fulfilled());
     }
   }
 }

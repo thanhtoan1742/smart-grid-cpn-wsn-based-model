@@ -25,4 +25,6 @@ void debug(Ts... args) {
   std::cerr << std::endl;
 }
 
+std::string padded(std::string str, int size = 10, char padder = ' ');
+
 #endif // UTILS_H

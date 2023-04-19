@@ -1,6 +1,7 @@
 #include "State.h"
 
 #include <iterator>
+#include <string>
 #include <unordered_set>
 
 #include "Carrier.h"
@@ -54,6 +55,16 @@ Power State::fulfilled() const& {
   return res;
 }
 
+Power State::needFulfilled() const& {
+  Power res(0);
+  for (int i = 0; i < grid->cars.size(); ++i)
+    if (grid->cars[i].ct == CarrierType::Generator) {
+      Power need = grid->cars[i].capacity - carStates[i].used;
+      res        += std::max(0_pu, carStates[i].keeping - need);
+    }
+  return res;
+}
+
 Power State::keeping() const& {
   Power res(0);
   for (auto const& carState: carStates)
@@ -72,11 +83,9 @@ std::vector<State> State::generateNextStates() const& {
   for (int i = 0; i < grid->cars.size(); ++i) {
     if (grid->cars[i].ct == CarrierType::Generator) {
       uniqueStates.insert(createChildState(i, carStates[i].fulfill()));
-      // debug("  GNS: fulfill: size", uniqueStates.size());
     }
     if (grid->cars[i].ct == CarrierType::Consumer) {
       uniqueStates.insert(createChildState(i, carStates[i].demand()));
-      // debug("  GNS: demand: size", uniqueStates.size());
     }
   }
 
@@ -91,9 +100,8 @@ std::vector<State> State::generateNextStates() const& {
       nextState.carStates[inp] = nextState.carStates[inp].send(amount);
       nextState.carStates[out] =
           nextState.carStates[out].receive(amount.compensateLoss(loss));
-      // debug(nextState);
       uniqueStates.insert(nextState);
-      // debug("  GNS: transmit: size", uniqueStates.size());
+      break; // only try maxAmount
     }
   }
 
@@ -108,7 +116,9 @@ std::string State::toString() const& {
     return "[]";
   std::string str = "[";
   for (auto const& carState: carStates)
-    str += carState.toString() + " ";
+    str += padded(
+        std::to_string(carState.car->id) + "|" + carState.toString() + " "
+    );
   str[str.size() - 1] = ']';
   return str;
 }
