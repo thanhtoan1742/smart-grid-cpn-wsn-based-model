@@ -75,7 +75,7 @@ Power State::keeping() const& {
   return res;
 }
 
-State State::createChildState(int idx, PowerSystemState const& newCarState)
+State State::createChildState(i32 idx, PowerSystemState const& newCarState)
     const& {
   std::vector<PowerSystemState> newCarStates(carStates);
   newCarStates[idx] = std::move(newCarState);

@@ -101,7 +101,7 @@ void StateExplorer::generateStateSpace() {
 }
 
 void prettyPrintState(State const& state) {
-  for (int i = 0; i < state.depth; ++i)
+  for (i32 i = 0; i < state.depth; ++i)
     std::cout << " ";
   std::cout << state.toString() << " ";
   std::cout << std::endl;

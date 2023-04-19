@@ -25,7 +25,7 @@ private:
   u64 value;
 };
 
-Power operator""_pu(u64 value);
+Power operator""_pu(unsigned long long value);
 
 } // namespace sgrid
 #endif // POWER_H

@@ -30,7 +30,7 @@ struct State {
   Power needFulfilled() const&;
   Power keeping() const&;
 
-  State createChildState(int idx, PowerSystemState const& carState) const&;
+  State createChildState(i32 idx, PowerSystemState const& carState) const&;
   std::vector<State> generateNextStates() const&;
 
   std::string toString() const&;
