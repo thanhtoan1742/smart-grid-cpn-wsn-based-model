@@ -19,4 +19,12 @@ struct Grid {
   std::string toString() const&;
 };
 
+struct CircuitBreakerVectorFactory {
+  std::vector<CircuitBreaker> cbs;
+
+  CircuitBreakerVectorFactory&
+  addCircuitBreaker(int inp, int out, Power capacity = 0, Percentage loss = 0);
+  std::vector<CircuitBreaker> toVector();
+};
+
 #endif // GRID_H
