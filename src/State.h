@@ -13,14 +13,14 @@ namespace sgrid {
 
 struct State {
   Grid*                         grid;
-  std::vector<PowerSystemState> carStates;
+  std::vector<PowerSystemState> psStates;
 
   i32                 depth;
   State*              parent;
   std::vector<State*> children;
 
   State(Grid* grid);
-  State(Grid* grid, std::vector<PowerSystemState> const& carState);
+  State(Grid* grid, std::vector<PowerSystemState> const& psStates);
 
   bool operator==(State const& other) const&;
 
@@ -30,7 +30,7 @@ struct State {
   Power needFulfilled() const&;
   Power keeping() const&;
 
-  State createChildState(i32 idx, PowerSystemState const& carState) const&;
+  State createChildState(i32 idx, PowerSystemState const& psState) const&;
   std::vector<State> generateNextStates() const&;
 
   std::string toString() const&;

@@ -59,33 +59,32 @@ int main() {
    *    C2-----------B5----------G8
    *
    * */
-  auto grid = Grid{
-      {
-       PowerSystem(0, PowerSystemType::Consumer, 50),
-       PowerSystem(1, PowerSystemType::Consumer, 50),
-       PowerSystem(2, PowerSystemType::Consumer, 50),
-       PowerSystem(3, PowerSystemType::Bus),
-       PowerSystem(4, PowerSystemType::Bus),
-       PowerSystem(5, PowerSystemType::Bus),
-       PowerSystem(6, PowerSystemType::Bus),
-       PowerSystem(7, PowerSystemType::Bus),
-       PowerSystem(8, PowerSystemType::Generator, 50),
-       PowerSystem(9, PowerSystemType::Generator, 30),
-       PowerSystem(10, PowerSystemType::Generator, 30),
-       },
-      TransmissionLineVectorFactory()
-          .addTransmissionLine(0, 3, 1000, 5)
-          .addTransmissionLine(3, 6, 1000, 5)
-          .addTransmissionLine(6, 10, 1000, 5)
-          .addTransmissionLine(3, 7, 1000, 5)
-          .addTransmissionLine(7, 9, 1000, 5)
-          .addTransmissionLine(7, 4, 1000, 5)
-          .addTransmissionLine(4, 1, 1000, 5)
-          .addTransmissionLine(4, 5, 1000, 5)
-          .addTransmissionLine(2, 5, 1000, 5)
-          .addTransmissionLine(8, 5, 1000, 5)
-          .toVector(),
-  };
+  // clang-format off
+  Grid grid = GridFactory()
+    .createPowerSystem(PowerSystemType::Consumer, 50)
+    .createPowerSystem(PowerSystemType::Consumer, 50)
+    .createPowerSystem(PowerSystemType::Consumer, 50)
+    .createPowerSystem(PowerSystemType::Bus)
+    .createPowerSystem(PowerSystemType::Bus)
+    .createPowerSystem(PowerSystemType::Bus)
+    .createPowerSystem(PowerSystemType::Bus)
+    .createPowerSystem(PowerSystemType::Bus)
+    .createPowerSystem(PowerSystemType::Generator, 50)
+    .createPowerSystem(PowerSystemType::Generator, 120)
+    .createPowerSystem(PowerSystemType::Generator, 30)
+    .createTransmissionLine(0, 3, 1000, 5)
+    .createTransmissionLine(3, 6, 1000, 5)
+    .createTransmissionLine(6, 10, 1000, 5)
+    .createTransmissionLine(3, 7, 1000, 5)
+    .createTransmissionLine(7, 9, 1000, 5)
+    .createTransmissionLine(7, 4, 1000, 5)
+    .createTransmissionLine(4, 1, 1000, 5)
+    .createTransmissionLine(4, 5, 1000, 5)
+    .createTransmissionLine(2, 5, 1000, 5)
+    .createTransmissionLine(8, 5, 1000, 5)
+    .createGrid();
+  // clang-format on
+
   StateExplorer stateExplorer(&grid, State(&grid));
   debug(grid.toString());
   stateExplorer.generateStateSpace();

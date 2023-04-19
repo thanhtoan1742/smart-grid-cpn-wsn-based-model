@@ -12,11 +12,11 @@ namespace sgrid {
 struct PowerSystemState {
   static Power const maxKeeping;
 
-  PowerSystem* car;
+  PowerSystem* ps;
   Power        keeping;
   Power        used;
 
-  PowerSystemState(PowerSystem* car, Power keeping = 0, Power used = 0);
+  PowerSystemState(PowerSystem* ps, Power keeping = 0, Power used = 0);
 
   bool operator==(PowerSystemState const& other) const&;
 

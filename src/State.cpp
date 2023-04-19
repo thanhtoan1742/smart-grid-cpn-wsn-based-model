@@ -13,30 +13,29 @@
 namespace sgrid {
 
 State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
-  for (PowerSystem& car: grid->cars)
-    carStates.emplace_back(&car);
+  for (PowerSystem& car: grid->pss)
+    psStates.emplace_back(&car);
 }
 
-State::State(Grid* _grid, std::vector<PowerSystemState> const& _carStates)
-    : grid(_grid), carStates(_carStates) {
+State::State(Grid* _grid, std::vector<PowerSystemState> const& _psStates)
+    : grid(_grid), psStates(_psStates) {
 }
 
 bool State::operator==(State const& other) const& {
-  if (carStates.size() != other.carStates.size())
+  if (psStates.size() != other.psStates.size())
     return false;
-  for (int i = 0; i < carStates.size(); ++i)
-    if (carStates[i] != other.carStates[i])
+  for (int i = 0; i < psStates.size(); ++i)
+    if (psStates[i] != other.psStates[i])
       return false;
   return true;
 }
 
 bool State::satisfied() const& {
-  for (int i = 0; i < grid->cars.size(); ++i) {
-    PowerSystem const& car = grid->cars[i];
-    if (car.pst == PowerSystemType::Consumer &&
-        carStates[i].used < car.capacity)
+  for (int i = 0; i < grid->pss.size(); ++i) {
+    PowerSystem const& ps = grid->pss[i];
+    if (ps.pst == PowerSystemType::Consumer && psStates[i].used < ps.capacity)
       return false;
-    if (carStates[i].keeping != 0)
+    if (psStates[i].keeping != 0)
       return false;
   }
   return true;
@@ -44,66 +43,66 @@ bool State::satisfied() const& {
 
 Power State::notDemaned() const& {
   Power res(0);
-  for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].pst == PowerSystemType::Consumer)
-      res += grid->cars[i].capacity - carStates[i].used;
+  for (int i = 0; i < grid->pss.size(); ++i)
+    if (grid->pss[i].pst == PowerSystemType::Consumer)
+      res += grid->pss[i].capacity - psStates[i].used;
   return res;
 }
 
 Power State::fulfilled() const& {
   Power res(0);
-  for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].pst == PowerSystemType::Generator)
-      res += carStates[i].used;
+  for (int i = 0; i < grid->pss.size(); ++i)
+    if (grid->pss[i].pst == PowerSystemType::Generator)
+      res += psStates[i].used;
   return res;
 }
 
 Power State::needFulfilled() const& {
   Power res(0);
-  for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].pst == PowerSystemType::Generator) {
-      Power need = grid->cars[i].capacity - carStates[i].used;
-      res        += std::max(0_pu, carStates[i].keeping - need);
+  for (int i = 0; i < grid->pss.size(); ++i)
+    if (grid->pss[i].pst == PowerSystemType::Generator) {
+      Power need = grid->pss[i].capacity - psStates[i].used;
+      res        += std::max(0_pu, psStates[i].keeping - need);
     }
   return res;
 }
 
 Power State::keeping() const& {
   Power res(0);
-  for (auto const& carState: carStates)
-    res += carState.keeping;
+  for (auto const& psState: psStates)
+    res += psState.keeping;
   return res;
 }
 
-State State::createChildState(i32 idx, PowerSystemState const& newCarState)
+State State::createChildState(i32 idx, PowerSystemState const& newPsState)
     const& {
-  std::vector<PowerSystemState> newCarStates(carStates);
-  newCarStates[idx] = std::move(newCarState);
-  return State(grid, newCarStates);
+  std::vector<PowerSystemState> newPsStates(psStates);
+  newPsStates[idx] = std::move(newPsState);
+  return State(grid, newPsStates);
 }
 
 std::vector<State> State::generateNextStates() const& {
   std::unordered_set<State> uniqueStates;
-  for (int i = 0; i < grid->cars.size(); ++i) {
-    if (grid->cars[i].pst == PowerSystemType::Generator) {
-      uniqueStates.insert(createChildState(i, carStates[i].fulfill()));
+  for (int i = 0; i < grid->pss.size(); ++i) {
+    if (grid->pss[i].pst == PowerSystemType::Generator) {
+      uniqueStates.insert(createChildState(i, psStates[i].fulfill()));
     }
-    if (grid->cars[i].pst == PowerSystemType::Consumer) {
-      uniqueStates.insert(createChildState(i, carStates[i].demand()));
+    if (grid->pss[i].pst == PowerSystemType::Consumer) {
+      uniqueStates.insert(createChildState(i, psStates[i].demand()));
     }
   }
 
-  for (int i = 0; i < grid->cbs.size(); ++i) {
-    i32        inp  = grid->cbs[i].inp;
-    i32        out  = grid->cbs[i].out;
-    Percentage loss = grid->cbs[i].loss;
+  for (int i = 0; i < grid->tls.size(); ++i) {
+    i32        inp  = grid->tls[i].inp;
+    i32        out  = grid->tls[i].out;
+    Percentage loss = grid->tls[i].loss;
 
-    Power maxAmount = std::min(carStates[inp].keeping, grid->cbs[i].capacity);
+    Power maxAmount = std::min(psStates[inp].keeping, grid->tls[i].capacity);
     for (Power amount = maxAmount; amount > 0_pu; amount -= 1) {
       State nextState(*this);
-      nextState.carStates[inp] = nextState.carStates[inp].send(amount);
-      nextState.carStates[out] =
-          nextState.carStates[out].receive(amount.compensateLoss(loss));
+      nextState.psStates[inp] = nextState.psStates[inp].send(amount);
+      nextState.psStates[out] =
+          nextState.psStates[out].receive(amount.compensateLoss(loss));
       uniqueStates.insert(nextState);
       break; // only try maxAmount
     }
@@ -116,13 +115,12 @@ std::vector<State> State::generateNextStates() const& {
 }
 
 std::string State::toString() const& {
-  if (carStates.empty())
+  if (psStates.empty())
     return "[]";
   std::string str = "[";
-  for (auto const& carState: carStates)
-    str += padded(
-        std::to_string(carState.car->id) + "|" + carState.toString() + " "
-    );
+  for (auto const& psState: psStates)
+    str +=
+        padded(std::to_string(psState.ps->id) + "|" + psState.toString() + " ");
   str[str.size() - 1] = ']';
   return str;
 }
@@ -132,8 +130,8 @@ std::string State::toString() const& {
 std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state
 ) const noexcept {
   std::string str;
-  for (auto const& carState: state.carStates)
-    str += std::to_string(carState.keeping) + ":" +
-           std::to_string(carState.used) + " ";
+  for (auto const& psState: state.psStates)
+    str += std::to_string(psState.keeping) + ":" +
+           std::to_string(psState.used) + " ";
   return std::hash<std::string>()(str);
 }
