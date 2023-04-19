@@ -30,33 +30,41 @@ std::string Grid::toString() const& {
 }
 
 GridFactory&
-GridFactory::createPowerSystem(PowerSystemType pst, Power capacity) {
-  pss.emplace_back(0, pst, capacity);
+GridFactory::createPowerSystem(i32 ref, PowerSystemType pst, Power capacity) {
+  pss.emplace_back(ref, pst, capacity);
   return *this;
 }
 
 GridFactory& GridFactory::createTransmissionLine(
-    i32 inp, i32 out, Power capacity, Percentage loss
+    i32 inpRef, i32 outRef, Power capacity, Percentage loss
 ) {
-  tls.emplace_back(0, inp, out, capacity, loss);
+  tls.emplace_back(0, inpRef, outRef, capacity, loss);
   return *this;
 }
 
 Grid GridFactory::createGrid() {
-  for (int sz = pss.size(), i = 0; i < sz; ++i)
-    pss[i].id = i;
+  // for every CON or GEN, create an intermediate PowerSystem
+  // to force one direction connection to CON or GEN.
+  for (int sz = pss.size(), i = 0; i < sz; ++i) {
+    if (pss[i].pst == PowerSystemType::Bus)
+      continue;
+
+    i32 newPsId = pss.size();
+    pss.emplace_back(newPsId, pss[i].pst, pss[i].capacity);
+    pss[i].pst      = PowerSystemType::Bus;
+    pss[i].capacity = 0;
+
+    if (pss.back().pst == PowerSystemType::Consumer)
+      tls.emplace_back(0, newPsId, pss[i].id, Power::maxPower);
+    else
+      tls.emplace_back(0, pss[i].id, newPsId, Power::maxPower);
+  }
 
   for (int sz = tls.size(), i = 0; i < sz; ++i) {
     // for arc contains CON, force direction: CON -> PowerSystem.
     // for arc contains GEN, force direction: PowerSystem -> GEN.
     // for arc that is not one of the aboves, make sure it has both direction.
-    // this code will bug out if there is a PowerSystem that is both GEN and CON
-    // (which should never happens).
     TransmissionLine& tl = tls[i];
-    if (pss[tl.out].pst == PowerSystemType::Consumer)
-      std::swap(tl.inp, tl.out);
-    if (pss[tl.inp].pst == PowerSystemType::Generator)
-      std::swap(tl.inp, tl.out);
     if (pss[tl.inp].pst == PowerSystemType::Consumer)
       continue;
     if (pss[tl.out].pst == PowerSystemType::Generator)

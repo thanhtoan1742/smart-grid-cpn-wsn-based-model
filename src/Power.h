@@ -6,6 +6,8 @@
 namespace sgrid {
 
 struct Power {
+  static Power const maxPower;
+
   Power(u64 value = 0);
 
   Power operator+(Power const& other) const&;
