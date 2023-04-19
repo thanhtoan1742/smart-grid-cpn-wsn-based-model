@@ -31,7 +31,8 @@ bool State::operator==(State const& other) const& {
 bool State::satisfied() const& {
   for (int i = 0; i < grid->cars.size(); ++i) {
     PowerSystem const& car = grid->cars[i];
-    if (car.ct == PowerSystemType::Consumer && carStates[i].used < car.capacity)
+    if (car.pst == PowerSystemType::Consumer &&
+        carStates[i].used < car.capacity)
       return false;
     if (carStates[i].keeping != 0)
       return false;
@@ -42,7 +43,7 @@ bool State::satisfied() const& {
 Power State::notDemaned() const& {
   Power res(0);
   for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].ct == PowerSystemType::Consumer)
+    if (grid->cars[i].pst == PowerSystemType::Consumer)
       res += grid->cars[i].capacity - carStates[i].used;
   return res;
 }
@@ -50,7 +51,7 @@ Power State::notDemaned() const& {
 Power State::fulfilled() const& {
   Power res(0);
   for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].ct == PowerSystemType::Generator)
+    if (grid->cars[i].pst == PowerSystemType::Generator)
       res += carStates[i].used;
   return res;
 }
@@ -58,7 +59,7 @@ Power State::fulfilled() const& {
 Power State::needFulfilled() const& {
   Power res(0);
   for (int i = 0; i < grid->cars.size(); ++i)
-    if (grid->cars[i].ct == PowerSystemType::Generator) {
+    if (grid->cars[i].pst == PowerSystemType::Generator) {
       Power need = grid->cars[i].capacity - carStates[i].used;
       res        += std::max(0_pu, carStates[i].keeping - need);
     }
@@ -82,10 +83,10 @@ State State::createChildState(int idx, PowerSystemState const& newCarState)
 std::vector<State> State::generateNextStates() const& {
   std::unordered_set<State> uniqueStates;
   for (int i = 0; i < grid->cars.size(); ++i) {
-    if (grid->cars[i].ct == PowerSystemType::Generator) {
+    if (grid->cars[i].pst == PowerSystemType::Generator) {
       uniqueStates.insert(createChildState(i, carStates[i].fulfill()));
     }
-    if (grid->cars[i].ct == PowerSystemType::Consumer) {
+    if (grid->cars[i].pst == PowerSystemType::Consumer) {
       uniqueStates.insert(createChildState(i, carStates[i].demand()));
     }
   }

@@ -15,9 +15,6 @@
 #include "TransmissionLine.h"
 #include "utils.h"
 
-void test(PowerSystemState&& ct) {
-}
-
 int main() {
   // auto grid = Grid{
   //     {
