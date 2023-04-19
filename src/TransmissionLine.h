@@ -17,7 +17,7 @@ struct TransmissionLine {
   Percentage loss;
 
   TransmissionLine(
-      int id, int inp, int out, Power capacity = 0, Percentage loss = 0
+      i32 id, i32 inp, i32 out, Power capacity = 0, Percentage loss = 0
   );
 
   std::string toString() const&;

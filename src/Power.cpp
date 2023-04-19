@@ -45,8 +45,8 @@ Power::operator u64() const& {
   return value;
 }
 
-Power operator""_pu(u64 value) {
-  return Power(value);
+Power operator""_pu(unsigned long long value) {
+  return Power(static_cast<u64>(value));
 }
 
 } // namespace sgrid

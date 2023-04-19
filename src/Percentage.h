@@ -6,7 +6,7 @@
 namespace sgrid {
 
 using Percentage = u64;
-Percentage operator""_pct(u64);
+Percentage operator""_pct(unsigned long long);
 
 } // namespace sgrid
 #endif // PERCENTAGE_H
