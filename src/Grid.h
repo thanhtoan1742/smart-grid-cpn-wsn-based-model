@@ -27,9 +27,11 @@ struct GridFactory {
   std::vector<PowerSystem>      pss;
   std::vector<TransmissionLine> tls;
 
-  GridFactory& createPowerSystem(PowerSystemType pst, Power capacity = 0);
   GridFactory&
-  createTransmissionLine(i32 inp, i32 out, Power capacity, Percentage loss = 0);
+  createPowerSystem(i32 ref, PowerSystemType pst, Power capacity = 0);
+  GridFactory& createTransmissionLine(
+      i32 inpRef, i32 outRef, Power capacity, Percentage loss = 0
+  );
   Grid createGrid();
 };
 

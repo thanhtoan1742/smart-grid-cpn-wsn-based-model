@@ -6,6 +6,8 @@
 
 namespace sgrid {
 
+Power const Power::maxPower(1'000'000);
+
 Power::Power(u64 _value): value{_value} {
 }
 
