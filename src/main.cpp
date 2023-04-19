@@ -5,17 +5,17 @@
 #include <string>
 #include <vector>
 
-#include "CarrierState.h"
 #include "CircuitBreaker.h"
 #include "Grid.h"
 #include "Percentage.h"
 #include "Power.h"
 #include "PowerSystem.h"
+#include "PowerSystemState.h"
 #include "State.h"
 #include "StateExplorer.h"
 #include "utils.h"
 
-void test(CarrierState&& ct) {
+void test(PowerSystemState&& ct) {
 }
 
 int main() {

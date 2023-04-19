@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "CarrierState.h"
 #include "Grid.h"
+#include "PowerSystemState.h"
 #include "State.h"
 
 struct StateExplorer {

@@ -4,10 +4,10 @@
 #include <string>
 #include <unordered_set>
 
-#include "CarrierState.h"
 #include "Percentage.h"
 #include "Power.h"
 #include "PowerSystem.h"
+#include "PowerSystemState.h"
 #include "utils.h"
 
 State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
@@ -15,7 +15,7 @@ State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
     carStates.emplace_back(&car);
 }
 
-State::State(Grid* _grid, std::vector<CarrierState> const& _carStates)
+State::State(Grid* _grid, std::vector<PowerSystemState> const& _carStates)
     : grid(_grid), carStates(_carStates) {
 }
 
@@ -72,8 +72,9 @@ Power State::keeping() const& {
   return res;
 }
 
-State State::createChildState(int idx, CarrierState const& newCarState) const& {
-  std::vector<CarrierState> newCarStates(carStates);
+State State::createChildState(int idx, PowerSystemState const& newCarState)
+    const& {
+  std::vector<PowerSystemState> newCarStates(carStates);
   newCarStates[idx] = std::move(newCarState);
   return State(grid, newCarStates);
 }

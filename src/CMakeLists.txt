@@ -8,6 +8,6 @@ add_executable(
   main.cpp
   Percentage.cpp Power.cpp
   PowerSystem.cpp CircuitBreaker.cpp Grid.cpp
-  CarrierState.cpp State.cpp StateExplorer.cpp
+  PowerSystemState.cpp State.cpp StateExplorer.cpp
   utils.cpp
 )
