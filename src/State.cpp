@@ -10,6 +10,8 @@
 #include "PowerSystemState.h"
 #include "utils.h"
 
+namespace sgrid {
+
 State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
   for (PowerSystem& car: grid->cars)
     carStates.emplace_back(&car);
@@ -125,7 +127,10 @@ std::string State::toString() const& {
   return str;
 }
 
-std::size_t std::hash<State>::operator()(State const& state) const noexcept {
+} // namespace sgrid
+
+std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state
+) const noexcept {
   std::string str;
   for (auto const& carState: state.carStates)
     str += std::to_string(carState.keeping) + ":" +

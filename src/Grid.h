@@ -7,6 +7,8 @@
 #include "PowerSystem.h"
 #include "TransmissionLine.h"
 
+namespace sgrid {
+
 struct Grid {
   std::vector<PowerSystem>      cars;
   std::vector<TransmissionLine> cbs;
@@ -29,4 +31,5 @@ struct TransmissionLineVectorFactory {
   std::vector<TransmissionLine> toVector();
 };
 
+} // namespace sgrid
 #endif // GRID_H

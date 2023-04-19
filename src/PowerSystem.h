@@ -6,6 +6,8 @@
 #include "Power.h"
 #include "Types.h"
 
+namespace sgrid {
+
 enum struct PowerSystemType { Generator = 'G', Consumer = 'C', Bus = 'B' };
 
 struct PowerSystem {
@@ -18,4 +20,5 @@ struct PowerSystem {
   std::string toString() const&;
 };
 
+} // namespace sgrid
 #endif // CARRIER_H

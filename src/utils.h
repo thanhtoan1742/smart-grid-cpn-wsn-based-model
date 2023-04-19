@@ -6,6 +6,8 @@
 
 #include "State.h"
 
+namespace sgrid {
+
 void _debug(State const& state);
 
 template <typename T>
@@ -28,4 +30,5 @@ void debug(Ts... args) {
 
 std::string padded(std::string str, int size = 10, char padder = ' ');
 
+} // namespace sgrid
 #endif // UTILS_H

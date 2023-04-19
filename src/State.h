@@ -9,6 +9,8 @@
 #include "Grid.h"
 #include "PowerSystemState.h"
 
+namespace sgrid {
+
 struct State {
   Grid*                         grid;
   std::vector<PowerSystemState> carStates;
@@ -34,9 +36,11 @@ struct State {
   std::string toString() const&;
 };
 
+} // namespace sgrid
+
 template <>
-struct std::hash<State> {
-  size_t operator()(State const& state) const noexcept;
+struct std::hash<sgrid::State> {
+  size_t operator()(sgrid::State const& state) const noexcept;
 };
 
 #endif // STATE_H

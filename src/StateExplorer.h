@@ -7,6 +7,8 @@
 #include "PowerSystemState.h"
 #include "State.h"
 
+namespace sgrid {
+
 struct StateExplorer {
   Grid* grid;
   State initState;
@@ -22,4 +24,5 @@ struct StateExplorer {
   void prettyPrintBestStateTrace() const&;
 };
 
+} // namespace sgrid
 #endif // STATE_EXPLORER_H

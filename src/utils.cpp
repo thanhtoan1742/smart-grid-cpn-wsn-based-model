@@ -1,5 +1,7 @@
 #include "utils.h"
 
+namespace sgrid {
+
 void _debug(State const& state) {
   std::cerr << state.toString() << " ";
   std::cerr << "parent:" << state.parent << " ";
@@ -11,3 +13,5 @@ std::string padded(std::string str, int size, char padder) {
     str += padder;
   return str;
 }
+
+} // namespace sgrid
