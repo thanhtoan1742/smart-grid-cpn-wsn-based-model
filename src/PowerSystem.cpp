@@ -1,14 +1,14 @@
-#include "Carrier.h"
+#include "PowerSystem.h"
 
 #include <string>
 
 #include "Power.h"
 
-Carrier::Carrier(i32 _id, CarrierType _ct, Power _capacity)
+PowerSystem::PowerSystem(i32 _id, PowerSystemType _ct, Power _capacity)
     : id{_id}, ct{_ct}, capacity{_capacity} {
 }
 
-std::string Carrier::toString() const& {
+std::string PowerSystem::toString() const& {
   return std::string(1, static_cast<char>(ct)) + std::to_string(id) + ":" +
          std::to_string(capacity);
 }

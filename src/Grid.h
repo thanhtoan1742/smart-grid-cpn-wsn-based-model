@@ -4,16 +4,17 @@
 #include <string>
 #include <vector>
 
-#include "Carrier.h"
 #include "CircuitBreaker.h"
+#include "PowerSystem.h"
 
 struct Grid {
-  std::vector<Carrier>        cars;
+  std::vector<PowerSystem>    cars;
   std::vector<CircuitBreaker> cbs;
 
   Grid();
   Grid(
-      std::vector<Carrier> const& cars, std::vector<CircuitBreaker> const& cbs
+      std::vector<PowerSystem> const&    cars,
+      std::vector<CircuitBreaker> const& cbs
   );
 
   std::string toString() const&;

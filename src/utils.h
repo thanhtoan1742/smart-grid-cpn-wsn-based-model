@@ -1,9 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "State.h"
 #include <iostream>
 #include <vector>
+
+#include "State.h"
 
 void _debug(State const& state);
 

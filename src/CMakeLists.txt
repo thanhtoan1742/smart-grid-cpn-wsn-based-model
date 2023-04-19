@@ -7,7 +7,7 @@ add_executable(
   main
   main.cpp
   Percentage.cpp Power.cpp
-  Carrier.cpp CircuitBreaker.cpp Grid.cpp
+  PowerSystem.cpp CircuitBreaker.cpp Grid.cpp
   CarrierState.cpp State.cpp StateExplorer.cpp
   utils.cpp
 )

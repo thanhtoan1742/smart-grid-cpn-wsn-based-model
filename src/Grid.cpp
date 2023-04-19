@@ -1,14 +1,17 @@
 #include "Grid.h"
+
+#include <vector>
+
 #include "CircuitBreaker.h"
 #include "Percentage.h"
 #include "utils.h"
-#include <vector>
 
 Grid::Grid() {
 }
 
 Grid::Grid(
-    std::vector<Carrier> const& _cars, std::vector<CircuitBreaker> const& _cbs
+    std::vector<PowerSystem> const&    _cars,
+    std::vector<CircuitBreaker> const& _cbs
 )
     : cars{_cars}, cbs{_cbs} {
 }

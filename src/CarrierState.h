@@ -3,18 +3,18 @@
 
 #include <functional>
 
-#include "Carrier.h"
 #include "Percentage.h"
 #include "Power.h"
+#include "PowerSystem.h"
 
 struct CarrierState {
   static Power const maxKeeping;
 
-  Carrier* car;
-  Power    keeping;
-  Power    used;
+  PowerSystem* car;
+  Power        keeping;
+  Power        used;
 
-  CarrierState(Carrier* car, Power keeping = 0, Power used = 0);
+  CarrierState(PowerSystem* car, Power keeping = 0, Power used = 0);
 
   bool operator==(CarrierState const& other) const&;
 

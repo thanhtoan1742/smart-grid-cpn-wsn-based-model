@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "Carrier.h"
+#include "PowerSystem.h"
 
 Power const CarrierState::maxKeeping(400);
 
-CarrierState::CarrierState(Carrier* _car, Power _keeping, Power _used)
+CarrierState::CarrierState(PowerSystem* _car, Power _keeping, Power _used)
     : car(_car), keeping(_keeping), used(_used) {
 }
 
