@@ -9,9 +9,9 @@ namespace sgrid {
 Power const PowerSystemState::maxKeeping(400);
 
 PowerSystemState::PowerSystemState(
-    PowerSystem* _car, Power _keeping, Power _used
+    PowerSystem* _ps, Power _keeping, Power _used
 )
-    : car(_car), keeping(_keeping), used(_used) {
+    : ps(_ps), keeping(_keeping), used(_used) {
 }
 
 bool PowerSystemState::operator==(PowerSystemState const& other) const& {
@@ -19,14 +19,14 @@ bool PowerSystemState::operator==(PowerSystemState const& other) const& {
 }
 
 PowerSystemState PowerSystemState::fulfill() const& {
-  Power amount = std::min(car->capacity - used, keeping);
-  return PowerSystemState(car, keeping - amount, used + amount);
+  Power amount = std::min(ps->capacity - used, keeping);
+  return PowerSystemState(ps, keeping - amount, used + amount);
 }
 
 PowerSystemState PowerSystemState::demand() const& {
-  Power amount = car->capacity - used;
+  Power amount = ps->capacity - used;
   return PowerSystemState(
-      car,
+      ps,
       std::min(maxKeeping, keeping + amount),
       used + amount
   );
@@ -34,11 +34,11 @@ PowerSystemState PowerSystemState::demand() const& {
 
 PowerSystemState PowerSystemState::send(Power amount) const& {
   amount = std::min(amount, keeping);
-  return PowerSystemState(car, keeping - amount, used);
+  return PowerSystemState(ps, keeping - amount, used);
 }
 
 PowerSystemState PowerSystemState::receive(Power amount) const& {
-  return PowerSystemState(car, std::min(maxKeeping, keeping + amount), used);
+  return PowerSystemState(ps, std::min(maxKeeping, keeping + amount), used);
 }
 
 std::string PowerSystemState::toString() const& {
