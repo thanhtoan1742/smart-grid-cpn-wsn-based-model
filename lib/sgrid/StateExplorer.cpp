@@ -73,7 +73,7 @@ void StateExplorer::generateStateSpace() {
       continue;
 
     if (currentState->satisfied()) {
-      debug("SATISFIED STATE", currentState->toString());
+      // debug("SATISFIED STATE", currentState->toString());
       minFulfilled = currentState->fulfilled();
       bestState    = currentState;
       break;
