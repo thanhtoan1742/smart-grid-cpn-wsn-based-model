@@ -1,4 +1,4 @@
-#include <libsgrid/StateExplorer.h>
+#include <lib/sgrid/StateExplorer.h>
 
 #include <iostream>
 #include <limits>
@@ -7,9 +7,9 @@
 #include <queue>
 #include <unordered_set>
 
-#include <libsgrid/State.h>
-#include <libsgrid/Types.h>
-#include <libsgrid/utils.h>
+#include <lib/sgrid/State.h>
+#include <lib/sgrid/Types.h>
+#include <lib/sgrid/utils.h>
 
 namespace sgrid {
 

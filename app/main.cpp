@@ -5,15 +5,15 @@
 #include <string>
 #include <vector>
 
-#include <libsgrid/Grid.h>
-#include <libsgrid/Percentage.h>
-#include <libsgrid/Power.h>
-#include <libsgrid/PowerSystem.h>
-#include <libsgrid/PowerSystemState.h>
-#include <libsgrid/State.h>
-#include <libsgrid/StateExplorer.h>
-#include <libsgrid/TransmissionLine.h>
-#include <libsgrid/utils.h>
+#include <lib/sgrid/Grid.h>
+#include <lib/sgrid/Percentage.h>
+#include <lib/sgrid/Power.h>
+#include <lib/sgrid/PowerSystem.h>
+#include <lib/sgrid/PowerSystemState.h>
+#include <lib/sgrid/State.h>
+#include <lib/sgrid/StateExplorer.h>
+#include <lib/sgrid/TransmissionLine.h>
+#include <lib/sgrid/utils.h>
 
 using namespace sgrid;
 

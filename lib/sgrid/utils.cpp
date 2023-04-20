@@ -1,4 +1,4 @@
-#include <libsgrid/utils.h>
+#include <lib/sgrid/utils.h>
 
 namespace sgrid {
 
