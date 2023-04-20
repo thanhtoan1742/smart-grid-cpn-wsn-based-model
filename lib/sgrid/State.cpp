@@ -1,14 +1,14 @@
-#include <lib/sgrid/State.h>
+#include <sgrid/State.h>
 
 #include <iterator>
 #include <string>
 #include <unordered_set>
 
-#include <lib/sgrid/Percentage.h>
-#include <lib/sgrid/Power.h>
-#include <lib/sgrid/PowerSystem.h>
-#include <lib/sgrid/PowerSystemState.h>
-#include <lib/sgrid/utils.h>
+#include <sgrid/Percentage.h>
+#include <sgrid/Power.h>
+#include <sgrid/PowerSystem.h>
+#include <sgrid/PowerSystemState.h>
+#include <sgrid/utils.h>
 
 namespace sgrid {
 

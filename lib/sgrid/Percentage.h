@@ -1,7 +1,7 @@
 #ifndef PERCENTAGE_H
 #define PERCENTAGE_H
 
-#include <lib/sgrid/Types.h>
+#include <sgrid/Types.h>
 
 namespace sgrid {
 

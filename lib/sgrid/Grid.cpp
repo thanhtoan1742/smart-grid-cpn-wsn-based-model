@@ -1,11 +1,11 @@
-#include <lib/sgrid/Grid.h>
+#include <sgrid/Grid.h>
 
 #include <vector>
 
-#include <lib/sgrid/Percentage.h>
-#include <lib/sgrid/PowerSystem.h>
-#include <lib/sgrid/TransmissionLine.h>
-#include <lib/sgrid/utils.h>
+#include <sgrid/Percentage.h>
+#include <sgrid/PowerSystem.h>
+#include <sgrid/TransmissionLine.h>
+#include <sgrid/utils.h>
 
 namespace sgrid {
 

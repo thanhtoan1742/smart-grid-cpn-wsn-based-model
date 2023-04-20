@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include <lib/sgrid/Power.h>
-#include <lib/sgrid/Types.h>
+#include <sgrid/Power.h>
+#include <sgrid/Types.h>
 
 namespace sgrid {
 

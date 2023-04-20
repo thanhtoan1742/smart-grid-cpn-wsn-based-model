@@ -1,8 +1,8 @@
-#include <lib/sgrid/Power.h>
+#include <sgrid/Power.h>
 
 #include <algorithm>
 
-#include <lib/sgrid/Percentage.h>
+#include <sgrid/Percentage.h>
 
 namespace sgrid {
 

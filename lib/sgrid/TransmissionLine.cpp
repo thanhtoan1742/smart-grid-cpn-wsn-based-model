@@ -1,9 +1,9 @@
-#include <lib/sgrid/TransmissionLine.h>
+#include <sgrid/TransmissionLine.h>
 
 #include <string>
 
-#include <lib/sgrid/Percentage.h>
-#include <lib/sgrid/Power.h>
+#include <sgrid/Percentage.h>
+#include <sgrid/Power.h>
 
 namespace sgrid {
 

@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include <lib/sgrid/Percentage.h>
-#include <lib/sgrid/Power.h>
-#include <lib/sgrid/Types.h>
+#include <sgrid/Percentage.h>
+#include <sgrid/Power.h>
+#include <sgrid/Types.h>
 
 namespace sgrid {
 

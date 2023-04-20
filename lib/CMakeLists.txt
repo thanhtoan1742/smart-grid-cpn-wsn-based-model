@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(libsgrid STATIC)
+add_library(libsgrid SHARED)
 target_include_directories(libsgrid PUBLIC .)
 target_sources(
     libsgrid PUBLIC

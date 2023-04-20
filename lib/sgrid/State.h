@@ -6,8 +6,8 @@
 #include <ostream>
 #include <string>
 
-#include <lib/sgrid/Grid.h>
-#include <lib/sgrid/PowerSystemState.h>
+#include <sgrid/Grid.h>
+#include <sgrid/PowerSystemState.h>
 
 namespace sgrid {
 
