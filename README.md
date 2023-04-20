@@ -8,7 +8,7 @@ cmake --build build
 ```
 
 ## Test
-After building with cmake, run the `runtest` executable.
+After building with cmake, run the `tests` executable.
 
 ### Export compile command
 ```
