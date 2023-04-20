@@ -10,6 +10,7 @@ PowerSystemState::PowerSystemState(
     PowerSystem* _ps, Power _keeping, Power _used
 )
     : ps(_ps), keeping(_keeping), used(_used) {
+      remain_cap = ps->capacity;
 }
 
 bool PowerSystemState::operator==(PowerSystemState const& other) const& {

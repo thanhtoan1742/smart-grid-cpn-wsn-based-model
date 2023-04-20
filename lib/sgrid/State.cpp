@@ -1,8 +1,12 @@
 #include <sgrid/State.h>
 
 #include <iterator>
+#include <limits.h>
 #include <string>
 #include <unordered_set>
+#include <queue>
+#include <vector>
+
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
@@ -15,10 +19,12 @@ namespace sgrid {
 State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
   for (PowerSystem& car: grid->pss)
     psStates.emplace_back(&car);
+    updateIdealPath();
 }
 
 State::State(Grid* _grid, std::vector<PowerSystemState> const& _psStates)
     : grid(_grid), psStates(_psStates) {
+    updateIdealPath();
 }
 
 bool State::operator==(State const& other) const& {
@@ -118,6 +124,48 @@ std::vector<State> State::generateNextStates() const& {
       std::make_move_iterator(uniqueStates.begin()),
       std::make_move_iterator(uniqueStates.end())
   );
+}
+
+struct LossComparator {
+  bool operator()(std::pair<int, Percentage> const& a,
+                  std::pair<int, Percentage> const& b) const& {
+    return a.second < b.second;
+  }
+};
+
+void State::updateIdealPath(){
+  debug("RUN updateIdealPath\n");
+  std::priority_queue<std::pair<int, Percentage>, std::vector<std::pair<int, Percentage>>, LossComparator>  q;
+  std::vector<Percentage> minLoss(psStates.size(), ULLONG_MAX);
+
+  for(int i = 0; i < grid->tls.size(); i++){
+    i32       inp  = grid->tls[i].inp;
+    i32       out  = grid->tls[i].out;
+    if (grid->pss[out].pst == PowerSystemType::Generator && psStates[out].remain_cap > 0){
+      grid->pss[inp].genIdx = out;
+      minLoss[inp] = grid->tls[i].loss;
+      q.push(std::pair<int, Percentage>(inp, grid->tls[i].loss));
+    }
+  }
+
+  while (!q.empty()){
+    auto [idx, loss] = q.top();
+    q.pop();
+    if (minLoss[idx] != loss)
+      continue;
+    // debug("pop: " + std::to_string(idx) + " " + std::to_string(loss) + "\n");
+    
+    for (int i = 0; i < grid->pss[idx].tls.size(); i++){
+      TransmissionLine tl = grid->pss[idx].tls[i];
+      int out = tl.out;
+      grid->pss[out].updateIdealNeighbor(i, idx, grid->pss[idx].genIdx, loss + tl.loss);
+      if (minLoss[out] > loss + tl.loss){
+        grid->pss[out].genIdx = grid->pss[idx].genIdx;
+        minLoss[out] = loss + tl.loss;
+        q.push(std::pair<int, Percentage>(out, minLoss[out]));
+      }
+    }
+  }
 }
 
 std::string State::toString() const& {

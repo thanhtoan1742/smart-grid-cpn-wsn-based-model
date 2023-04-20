@@ -34,6 +34,8 @@ struct State {
   State demand() const&;
   std::vector<State> generateNextStates() const&;
 
+  void updateIdealPath();
+
   std::string toString() const&;
 };
 

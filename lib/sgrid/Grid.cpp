@@ -29,6 +29,14 @@ std::string Grid::toString() const& {
   return str;
 }
 
+std::string Grid::IdealPathToString() const&{
+  std::string str = "";
+  for (auto const& ps: pss){
+    str += ps.IdealPathToString() + "\n ";
+  }
+  return str;
+}
+
 GridFactory&
 GridFactory::createPowerSystem(i32 ref, PowerSystemType pst, Power capacity) {
   pss.emplace_back(ref, pst, capacity);
@@ -72,8 +80,11 @@ Grid GridFactory::createGrid() {
     tls.emplace_back(0, tl.out, tl.inp, tl.capacity, tl.loss);
   }
 
-  for (int i = 0; i < tls.size(); ++i)
+  for (int i = 0; i < tls.size(); ++i) {
     tls[i].id = i;
+    TransmissionLine& tl = tls[i];
+    pss[tl.inp].addTransmissionLine(tl);
+  }
 
   return Grid{std::move(pss), std::move(tls)};
 }
