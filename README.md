@@ -1,11 +1,14 @@
 # Smart Grid Using WSN Based Model
 
-## Build Instructions
+## Build
 Use cmake to build the project
 ```
 cmake -S . -B build
 cmake --build build
 ```
+
+## Test
+After building with cmake, run the `runtest` executable.
 
 ### Export compile command
 ```
