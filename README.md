@@ -1,17 +1,14 @@
 # Smart Grid Using WSN Based Model
 
 ## Build Instructions
-Run cmake from the root directory
+Use cmake to build the project
 ```
-cmake -S src -B build
-```
-Then build
-```
+cmake -S . -B build
 cmake --build build
 ```
 
 ### Export compile command
 ```
-cmake -S src -B build -G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+cmake -S . -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
 cp build/compile_commands.json .
 ```
