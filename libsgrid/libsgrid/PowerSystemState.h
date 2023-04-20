@@ -3,9 +3,9 @@
 
 #include <functional>
 
-#include "Percentage.h"
-#include "Power.h"
-#include "PowerSystem.h"
+#include <libsgrid/Percentage.h>
+#include <libsgrid/Power.h>
+#include <libsgrid/PowerSystem.h>
 
 namespace sgrid {
 

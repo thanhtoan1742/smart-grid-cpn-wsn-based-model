@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include "Grid.h"
-#include "PowerSystemState.h"
-#include "State.h"
+#include <libsgrid/Grid.h>
+#include <libsgrid/PowerSystemState.h>
+#include <libsgrid/State.h>
 
 namespace sgrid {
 
