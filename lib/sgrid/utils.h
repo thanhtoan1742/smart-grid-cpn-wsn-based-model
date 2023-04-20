@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include <libsgrid/State.h>
+#include <lib/sgrid/State.h>
 
 namespace sgrid {
 
