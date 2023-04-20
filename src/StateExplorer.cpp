@@ -50,6 +50,7 @@ void StateExplorer::generateStateSpace() {
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
 
+  initState = initState.demand();
   stateSpace.push_back(std::make_unique<State>(initState));
   q.push(stateSpace.back().get());
   visited.insert(initState);

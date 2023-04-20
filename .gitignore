@@ -4,4 +4,6 @@
 docs/pdf/
 
 build/
+out.txt
+
 compile_commands.json

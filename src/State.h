@@ -31,6 +31,7 @@ struct State {
   Power keeping() const&;
 
   State createChildState(i32 idx, PowerSystemState const& psState) const&;
+  State demand() const&;
   std::vector<State> generateNextStates() const&;
 
   std::string toString() const&;

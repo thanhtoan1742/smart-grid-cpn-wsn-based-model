@@ -81,15 +81,21 @@ State State::createChildState(i32 idx, PowerSystemState const& newPsState)
   return State(grid, newPsStates);
 }
 
+State State::demand() const& {
+  State newState(*this);
+  for (auto& psState: newState.psStates)
+    if (psState.ps->pst == PowerSystemType::Consumer) {
+      psState.keeping = psState.ps->capacity;
+      psState.used    = psState.ps->capacity;
+    }
+  return newState;
+}
+
 std::vector<State> State::generateNextStates() const& {
   std::unordered_set<State> uniqueStates;
   for (int i = 0; i < grid->pss.size(); ++i) {
-    if (grid->pss[i].pst == PowerSystemType::Generator) {
+    if (grid->pss[i].pst == PowerSystemType::Generator)
       uniqueStates.insert(createChildState(i, psStates[i].fulfill()));
-    }
-    if (grid->pss[i].pst == PowerSystemType::Consumer) {
-      uniqueStates.insert(createChildState(i, psStates[i].demand()));
-    }
   }
 
   for (int i = 0; i < grid->tls.size(); ++i) {

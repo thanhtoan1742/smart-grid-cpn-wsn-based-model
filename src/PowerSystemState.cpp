@@ -6,8 +6,6 @@
 
 namespace sgrid {
 
-Power const PowerSystemState::maxKeeping(400);
-
 PowerSystemState::PowerSystemState(
     PowerSystem* _ps, Power _keeping, Power _used
 )
@@ -23,22 +21,13 @@ PowerSystemState PowerSystemState::fulfill() const& {
   return PowerSystemState(ps, keeping - amount, used + amount);
 }
 
-PowerSystemState PowerSystemState::demand() const& {
-  Power amount = ps->capacity - used;
-  return PowerSystemState(
-      ps,
-      std::min(maxKeeping, keeping + amount),
-      used + amount
-  );
-}
-
 PowerSystemState PowerSystemState::send(Power amount) const& {
   amount = std::min(amount, keeping);
   return PowerSystemState(ps, keeping - amount, used);
 }
 
 PowerSystemState PowerSystemState::receive(Power amount) const& {
-  return PowerSystemState(ps, std::min(maxKeeping, keeping + amount), used);
+  return PowerSystemState(ps, keeping + amount, used);
 }
 
 std::string PowerSystemState::toString() const& {

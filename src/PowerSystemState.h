@@ -10,8 +10,6 @@
 namespace sgrid {
 
 struct PowerSystemState {
-  static Power const maxKeeping;
-
   PowerSystem* ps;
   Power        keeping;
   Power        used;
@@ -21,7 +19,6 @@ struct PowerSystemState {
   bool operator==(PowerSystemState const& other) const&;
 
   PowerSystemState fulfill() const&;
-  PowerSystemState demand() const&;
   PowerSystemState send(Power amount) const&;
   PowerSystemState receive(Power amount) const&;
 
