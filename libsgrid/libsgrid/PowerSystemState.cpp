@@ -1,8 +1,8 @@
-#include "PowerSystemState.h"
+#include <libsgrid/PowerSystemState.h>
 
 #include <string>
 
-#include "PowerSystem.h"
+#include <libsgrid/PowerSystem.h>
 
 namespace sgrid {
 

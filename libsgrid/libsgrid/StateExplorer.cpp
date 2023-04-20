@@ -1,4 +1,4 @@
-#include "StateExplorer.h"
+#include <libsgrid/StateExplorer.h>
 
 #include <iostream>
 #include <limits>
@@ -7,9 +7,9 @@
 #include <queue>
 #include <unordered_set>
 
-#include "State.h"
-#include "Types.h"
-#include "utils.h"
+#include <libsgrid/State.h>
+#include <libsgrid/Types.h>
+#include <libsgrid/utils.h>
 
 namespace sgrid {
 
@@ -71,16 +71,13 @@ void StateExplorer::generateStateSpace() {
 
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
-    // if (currentState->depth == 4){
-    //   break;
-    // }
+
     if (currentState->satisfied()) {
-      // debug("SATISFIED STATE", currentState->toString());
+      debug("SATISFIED STATE", currentState->toString());
       minFulfilled = currentState->fulfilled();
       bestState    = currentState;
       break;
     }
-    // debug("NEXT STATES SIZE", currentState->generateNextStates().size());
 
     for (State& nextState: currentState->generateNextStates()) {
       auto [_, inserted] = visited.insert(nextState);
@@ -93,10 +90,6 @@ void StateExplorer::generateStateSpace() {
       currentState->children.push_back(nextStatePtr);
       nextStatePtr->parent = currentState;
       nextStatePtr->depth  = currentState->depth + 1;
-      // if (currentState->toString() == "[0:10 0:10 0:0 10:0 0:0 13:0 0:0
-      // 0:0]") debug("GEN STATE", currentState->toString(), " --> ",
-      // nextStatePtr->toString(), " | ", nextStatePtr->keeping() +
-      // nextStatePtr->fulfilled());
     }
   }
 }

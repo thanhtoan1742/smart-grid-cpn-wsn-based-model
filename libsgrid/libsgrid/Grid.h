@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "Percentage.h"
-#include "PowerSystem.h"
-#include "TransmissionLine.h"
+#include <libsgrid/Percentage.h>
+#include <libsgrid/PowerSystem.h>
+#include <libsgrid/TransmissionLine.h>
 
 namespace sgrid {
 

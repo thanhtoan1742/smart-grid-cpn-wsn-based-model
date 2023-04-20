@@ -1,14 +1,14 @@
-#include "State.h"
+#include <libsgrid/State.h>
 
 #include <iterator>
 #include <string>
 #include <unordered_set>
 
-#include "Percentage.h"
-#include "Power.h"
-#include "PowerSystem.h"
-#include "PowerSystemState.h"
-#include "utils.h"
+#include <libsgrid/Percentage.h>
+#include <libsgrid/Power.h>
+#include <libsgrid/PowerSystem.h>
+#include <libsgrid/PowerSystemState.h>
+#include <libsgrid/utils.h>
 
 namespace sgrid {
 

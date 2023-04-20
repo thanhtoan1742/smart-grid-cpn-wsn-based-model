@@ -1,7 +1,7 @@
 #ifndef POWER_H
 #define POWER_H
 
-#include "Percentage.h"
+#include <libsgrid/Percentage.h>
 
 namespace sgrid {
 

@@ -5,15 +5,15 @@
 #include <string>
 #include <vector>
 
-#include "Grid.h"
-#include "Percentage.h"
-#include "Power.h"
-#include "PowerSystem.h"
-#include "PowerSystemState.h"
-#include "State.h"
-#include "StateExplorer.h"
-#include "TransmissionLine.h"
-#include "utils.h"
+#include <libsgrid/Grid.h>
+#include <libsgrid/Percentage.h>
+#include <libsgrid/Power.h>
+#include <libsgrid/PowerSystem.h>
+#include <libsgrid/PowerSystemState.h>
+#include <libsgrid/State.h>
+#include <libsgrid/StateExplorer.h>
+#include <libsgrid/TransmissionLine.h>
+#include <libsgrid/utils.h>
 
 using namespace sgrid;
 
@@ -97,5 +97,6 @@ int main() {
   stateExplorer.generateStateSpace();
   // stateExplorer.prettyPrint();
   stateExplorer.prettyPrintBestStateTrace();
-  std::cout << "State Space Size: " << stateExplorer.stateSpace.size() << std::endl;
+  std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
+            << std::endl;
 }
