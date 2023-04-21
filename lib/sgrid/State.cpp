@@ -80,8 +80,7 @@ Power State::keeping() const& {
   return res;
 }
 
-State State::createChildState(i32 idx, PowerSystemState const& newPsState)
-    const& {
+State State::createChildState(i32 idx, PowerSystemState const& newPsState) const& {
   std::vector<PowerSystemState> newPsStates(psStates);
   newPsStates[idx] = std::move(newPsState);
   return State(grid, newPsStates);
@@ -135,16 +134,16 @@ struct LossComparator {
 
 void State::updateIdealPath(){
   debug("RUN updateIdealPath\n");
-  std::priority_queue<std::pair<int, Percentage>, std::vector<std::pair<int, Percentage>>, LossComparator>  q;
+  std::priority_queue<std::pair<i32, Percentage>, std::vector<std::pair<i32, Percentage>>, LossComparator>  q;
   std::vector<Percentage> minLoss(psStates.size(), ULLONG_MAX);
 
   for(int i = 0; i < grid->tls.size(); i++){
     i32       inp  = grid->tls[i].inp;
     i32       out  = grid->tls[i].out;
-    if (grid->pss[out].pst == PowerSystemType::Generator && psStates[out].remain_cap > 0){
+    if (grid->pss[out].pst == PowerSystemType::Generator && psStates[out].remainCap > 0){
       grid->pss[inp].genIdx = out;
       minLoss[inp] = grid->tls[i].loss;
-      q.push(std::pair<int, Percentage>(inp, grid->tls[i].loss));
+      q.push(std::make_pair(inp, grid->tls[i].loss));
     }
   }
 
@@ -154,7 +153,7 @@ void State::updateIdealPath(){
     if (minLoss[idx] != loss)
       continue;
     // debug("pop: " + std::to_string(idx) + " " + std::to_string(loss) + "\n");
-    
+
     for (int i = 0; i < grid->pss[idx].tls.size(); i++){
       TransmissionLine tl = grid->pss[idx].tls[i];
       int out = tl.out;
@@ -162,7 +161,7 @@ void State::updateIdealPath(){
       if (minLoss[out] > loss + tl.loss){
         grid->pss[out].genIdx = grid->pss[idx].genIdx;
         minLoss[out] = loss + tl.loss;
-        q.push(std::pair<int, Percentage>(out, minLoss[out]));
+        q.push(std::make_pair(out, minLoss[out]));
       }
     }
   }

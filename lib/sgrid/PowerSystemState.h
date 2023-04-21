@@ -13,7 +13,7 @@ struct PowerSystemState {
   PowerSystem* ps;
   Power        keeping;
   Power        used;
-  Power        remain_cap;
+  Power        remainCap;
 
   PowerSystemState(PowerSystem* ps, Power keeping = 0, Power used = 0);
 

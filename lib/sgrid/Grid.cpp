@@ -29,10 +29,10 @@ std::string Grid::toString() const& {
   return str;
 }
 
-std::string Grid::IdealPathToString() const&{
+std::string Grid::idealPathString() const&{
   std::string str = "";
   for (auto const& ps: pss){
-    str += ps.IdealPathToString() + "\n ";
+    str += ps.idealPathString() + "\n ";
   }
   return str;
 }

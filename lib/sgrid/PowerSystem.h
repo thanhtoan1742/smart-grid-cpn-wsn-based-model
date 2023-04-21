@@ -12,10 +12,10 @@ namespace sgrid {
 
 enum struct PowerSystemType { Generator = 'G', Consumer = 'C', Bus = 'B' };
 struct IdealPath{
-  int nextId;
+  i32 nextId;
   i32 genIdx;
   Percentage loss;
-  IdealPath(int nextId, i32 genIdx, Percentage loss);
+  IdealPath(i32 nextId, i32 genIdx, Percentage loss);
   std::string toString() const&;
 };
 
@@ -23,17 +23,19 @@ struct PowerSystem {
   i32             id;
   PowerSystemType pst;
   Power           capacity;
+
   std::vector<TransmissionLine> tls;
   std::vector<IdealPath*> idealPaths;
   i32             genIdx = -1;
 
   PowerSystem(i32 id, PowerSystemType pst, Power capacity = 0);
 
-  void addTransmissionLine(TransmissionLine tl);
-  void updateIdealNeighbor(int tlIdx, int idx, i32 genIdx, Percentage value);
-  std::vector<int> getIdealPathOrder();
   std::string toString() const&;
-  std::string IdealPathToString() const&;
+
+  void addTransmissionLine(TransmissionLine tl);
+  void updateIdealNeighbor(i32 tlIdx, i32 idx, i32 genIdx, Percentage value);
+  std::vector<i32> getIdealPathOrder();
+  std::string idealPathString() const&;
 };
 
 } // namespace sgrid

@@ -10,7 +10,7 @@
 
 namespace sgrid {
 
-IdealPath::IdealPath(int nextId, i32 genIdx, Percentage loss)
+IdealPath::IdealPath(i32 nextId, i32 genIdx, Percentage loss)
     : nextId{nextId},genIdx(genIdx), loss{loss} {
 }
 
@@ -26,7 +26,7 @@ void PowerSystem::addTransmissionLine(TransmissionLine tl) {
   tls.emplace_back(tl);
 }
 
-void PowerSystem::updateIdealNeighbor(int tlIdx, int idx, i32 genIdx, Percentage value){
+void PowerSystem::updateIdealNeighbor(i32 tlIdx, i32 idx, i32 genIdx, Percentage value){
   // debug("psId:", toString(), "idx: ", idx, "size: ", std::to_string(idealPaths.size()));
   while (tlIdx >= idealPaths.size())
     idealPaths.emplace_back(new IdealPath(idx, genIdx, value));
@@ -36,8 +36,8 @@ void PowerSystem::updateIdealNeighbor(int tlIdx, int idx, i32 genIdx, Percentage
   }
 }
 
-std::vector<int> PowerSystem::getIdealPathOrder(){
-  std::vector<int> order;
+std::vector<i32> PowerSystem::getIdealPathOrder(){
+  std::vector<i32> order;
   for (int i = 0; i < idealPaths.size(); i++){
     order.emplace_back(i);
   }
@@ -52,7 +52,7 @@ std::string PowerSystem::toString() const& {
          std::to_string(capacity) + "_genIdx:" + std::to_string(genIdx);
 }
 
-std::string PowerSystem::IdealPathToString() const& {
+std::string PowerSystem::idealPathString() const& {
   std::string str = toString() + "\n";
   for (auto const& ip: idealPaths){
     str += "\t" + ip->toString() + "\n ";
