@@ -97,7 +97,9 @@ State State::demand() const& {
   return newState;
 }
 
-std::vector<State> State::generateNextStates() const& {
+std::vector<State> State::generateNextStates() {
+  calculateOutcomes();
+
   std::unordered_set<State> uniqueStates;
   for (int i = 0; i < grid->pss.size(); ++i) {
     if (grid->pss[i].pst == PowerSystemType::Generator)
@@ -109,15 +111,16 @@ std::vector<State> State::generateNextStates() const& {
     i32        out  = grid->tls[i].out;
     Percentage loss = grid->tls[i].loss;
 
-    Power maxAmount = std::min(psStates[inp].keeping, grid->tls[i].capacity);
-    for (Power amount = maxAmount; amount > 0_pu; amount -= 1) {
-      State nextState(*this);
-      nextState.psStates[inp] = nextState.psStates[inp].send(amount);
-      nextState.psStates[out] =
-          nextState.psStates[out].receive(amount.compensateLoss(loss));
-      uniqueStates.insert(nextState);
-      break; // only try maxAmount
-    }
+    Outcome const& outcome = outcomes[grid->tls[i].id];
+    Power          amount  = std::min(
+        psStates[outcome.gen->id].fulfillable() / outcome.loss,
+        psStates[inp].keeping
+    );
+
+    State nextState(*this);
+    nextState.psStates[inp] = nextState.psStates[inp].send(amount);
+    nextState.psStates[out] = nextState.psStates[out].receive(amount * loss);
+    uniqueStates.insert(nextState);
   }
 
   return std::vector<State>(
