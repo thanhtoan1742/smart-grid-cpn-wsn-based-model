@@ -20,6 +20,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fmt)
 
 add_subdirectory(lib)
+target_link_libraries(libsgrid fmt)
 
 
 enable_testing()

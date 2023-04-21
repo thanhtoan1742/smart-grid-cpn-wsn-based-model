@@ -22,6 +22,8 @@ struct PowerSystemState {
   PowerSystemState send(Power amount) const&;
   PowerSystemState receive(Power amount) const&;
 
+  Power fulfillable() const&;
+
   std::string toString() const&;
 };
 

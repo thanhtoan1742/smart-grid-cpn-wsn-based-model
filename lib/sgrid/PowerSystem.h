@@ -2,8 +2,10 @@
 #define CARRIER_H
 
 #include <string>
+#include <vector>
 
 #include <sgrid/Power.h>
+#include <sgrid/TransmissionLine.h>
 #include <sgrid/Types.h>
 
 namespace sgrid {
@@ -14,6 +16,8 @@ struct PowerSystem {
   i32             id;
   PowerSystemType pst;
   Power           capacity;
+
+  std::vector<TransmissionLine*> revAdj;
 
   PowerSystem(i32 id, PowerSystemType pst, Power capacity = 0);
 

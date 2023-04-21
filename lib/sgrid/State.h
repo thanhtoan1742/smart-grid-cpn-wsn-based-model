@@ -7,6 +7,7 @@
 #include <string>
 
 #include <sgrid/Grid.h>
+#include <sgrid/Outcome.h>
 #include <sgrid/PowerSystemState.h>
 
 namespace sgrid {
@@ -14,6 +15,8 @@ namespace sgrid {
 struct State {
   Grid*                         grid;
   std::vector<PowerSystemState> psStates;
+
+  std::vector<Outcome> outcomes;
 
   i32                 depth;
   State*              parent;
@@ -33,6 +36,8 @@ struct State {
   State createChildState(i32 idx, PowerSystemState const& psState) const&;
   State demand() const&;
   std::vector<State> generateNextStates() const&;
+
+  void calculateOutcomes();
 
   std::string toString() const&;
 };
