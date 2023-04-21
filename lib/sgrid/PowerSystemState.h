@@ -13,7 +13,6 @@ struct PowerSystemState {
   PowerSystem* ps;
   Power        keeping;
   Power        used;
-  Power        remainCap;
 
   PowerSystemState(PowerSystem* ps, Power keeping = 0, Power used = 0);
 
@@ -22,6 +21,8 @@ struct PowerSystemState {
   PowerSystemState fulfill() const&;
   PowerSystemState send(Power amount) const&;
   PowerSystemState receive(Power amount) const&;
+
+  Power fulfillable() const&;
 
   std::string toString() const&;
 };

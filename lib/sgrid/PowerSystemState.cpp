@@ -9,7 +9,7 @@ namespace sgrid {
 PowerSystemState::PowerSystemState(
     PowerSystem* _ps, Power _keeping, Power _used
 )
-    : ps(_ps), keeping(_keeping), used(_used), remainCap(ps->capacity) {
+    : ps(_ps), keeping(_keeping), used(_used) {
 }
 
 bool PowerSystemState::operator==(PowerSystemState const& other) const& {

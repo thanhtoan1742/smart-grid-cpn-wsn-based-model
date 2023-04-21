@@ -20,7 +20,7 @@ Power Power::operator-(Power const& other) const& {
 }
 
 Power Power::operator*(Percentage const& percentage) const& {
-  return (value * percentage + 99) / 100;
+  return (value * percentage.value + Percentage::base - 1) / Percentage::base;
 }
 
 void Power::operator+=(Power const& other) & {
@@ -32,7 +32,7 @@ void Power::operator-=(Power const& other) & {
 }
 
 void Power::operator*=(Percentage const& percentage) & {
-  value = (value * percentage);
+  (*this) = (*this) * percentage;
 }
 
 bool Power::operator<(Power const& other) const& {

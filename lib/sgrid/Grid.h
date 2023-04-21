@@ -21,7 +21,6 @@ struct Grid {
   );
 
   std::string toString() const&;
-  std::string idealPathString() const&;
 };
 
 struct GridFactory {

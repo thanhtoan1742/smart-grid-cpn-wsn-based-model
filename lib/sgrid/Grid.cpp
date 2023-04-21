@@ -17,6 +17,9 @@ Grid::Grid(
     std::vector<TransmissionLine> const& _tls
 )
     : pss{_pss}, tls{_tls} {
+  for (auto& tl: tls) {
+    pss[tl.out].revAdj.push_back(&tl);
+  }
 }
 
 std::string Grid::toString() const& {
@@ -26,14 +29,6 @@ std::string Grid::toString() const& {
   str[str.size() - 1] = '\n';
   for (auto const& tl: tls)
     str += tl.toString() + "\n";
-  return str;
-}
-
-std::string Grid::idealPathString() const&{
-  std::string str = "";
-  for (auto const& ps: pss){
-    str += ps.idealPathString() + "\n ";
-  }
   return str;
 }
 
@@ -81,12 +76,11 @@ Grid GridFactory::createGrid() {
   }
 
   for (int i = 0; i < tls.size(); ++i) {
-    tls[i].id = i;
-    TransmissionLine& tl = tls[i];
-    pss[tl.inp].addTransmissionLine(tl);
+    tls[i].id   = i;
+    tls[i].loss = tls[i].loss + 100_pct;
   }
 
-  return Grid{std::move(pss), std::move(tls)};
+  return Grid(std::move(pss), std::move(tls));
 }
 
 } // namespace sgrid

@@ -1,12 +1,13 @@
+#include "sgrid/Outcome.h"
+#include "sgrid/TransmissionLine.h"
 #include <sgrid/State.h>
 
 #include <iterator>
 #include <limits.h>
+#include <queue>
 #include <string>
 #include <unordered_set>
-#include <queue>
 #include <vector>
-
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
@@ -16,15 +17,14 @@
 
 namespace sgrid {
 
-State::State(Grid* _grid): grid(_grid), depth(0), parent(nullptr) {
+State::State(Grid* _grid)
+    : grid(_grid), depth(0), parent(nullptr), outcomes(_grid->tls.size()) {
   for (PowerSystem& car: grid->pss)
     psStates.emplace_back(&car);
-    updateIdealPath();
 }
 
 State::State(Grid* _grid, std::vector<PowerSystemState> const& _psStates)
-    : grid(_grid), psStates(_psStates) {
-    updateIdealPath();
+    : grid(_grid), psStates(_psStates), outcomes(_grid->tls.size()) {
 }
 
 bool State::operator==(State const& other) const& {
@@ -80,7 +80,8 @@ Power State::keeping() const& {
   return res;
 }
 
-State State::createChildState(i32 idx, PowerSystemState const& newPsState) const& {
+State State::createChildState(i32 idx, PowerSystemState const& newPsState)
+    const& {
   std::vector<PowerSystemState> newPsStates(psStates);
   newPsStates[idx] = std::move(newPsState);
   return State(grid, newPsStates);
@@ -125,43 +126,42 @@ std::vector<State> State::generateNextStates() const& {
   );
 }
 
+using PSO = std::pair<PowerSystem*, Outcome*>;
+
 struct LossComparator {
-  bool operator()(std::pair<int, Percentage> const& a,
-                  std::pair<int, Percentage> const& b) const& {
-    return a.second < b.second;
+  bool operator()(PSO const& a, PSO const& b) {
+    return a.second->loss > b.second->loss;
   }
 };
 
-void State::updateIdealPath(){
-  debug("RUN updateIdealPath\n");
-  std::priority_queue<std::pair<i32, Percentage>, std::vector<std::pair<i32, Percentage>>, LossComparator>  q;
-  std::vector<Percentage> minLoss(psStates.size(), ULLONG_MAX);
+void State::calculateOutcomes() {
+  std::priority_queue<PSO, std::vector<PSO>, LossComparator> q;
+  std::vector<Outcome*> bestOutcome(psStates.size(), nullptr);
 
-  for(int i = 0; i < grid->tls.size(); i++){
-    i32       inp  = grid->tls[i].inp;
-    i32       out  = grid->tls[i].out;
-    if (grid->pss[out].pst == PowerSystemType::Generator && psStates[out].remainCap > 0){
-      grid->pss[inp].genIdx = out;
-      minLoss[inp] = grid->tls[i].loss;
-      q.push(std::make_pair(inp, grid->tls[i].loss));
-    }
+  for (TransmissionLine& tl: grid->tls) {
+    PowerSystem& gen = grid->pss[tl.out];
+    PowerSystem& inp = grid->pss[tl.inp];
+    if (gen.pst != PowerSystemType::Generator)
+      continue;
+    outcomes[tl.id]     = Outcome(tl.loss, &gen, &tl);
+    bestOutcome[inp.id] = &outcomes[tl.id];
+    q.emplace(&inp, bestOutcome[inp.id]);
   }
 
-  while (!q.empty()){
-    auto [idx, loss] = q.top();
+  while (!q.empty()) {
+    auto [ps, outcome] = q.top();
     q.pop();
-    if (minLoss[idx] != loss)
+    if (bestOutcome[ps->id] != outcome)
       continue;
-    // debug("pop: " + std::to_string(idx) + " " + std::to_string(loss) + "\n");
 
-    for (int i = 0; i < grid->pss[idx].tls.size(); i++){
-      TransmissionLine tl = grid->pss[idx].tls[i];
-      int out = tl.out;
-      grid->pss[out].updateIdealNeighbor(i, idx, grid->pss[idx].genIdx, loss + tl.loss);
-      if (minLoss[out] > loss + tl.loss){
-        grid->pss[out].genIdx = grid->pss[idx].genIdx;
-        minLoss[out] = loss + tl.loss;
-        q.push(std::make_pair(out, minLoss[out]));
+    for (TransmissionLine* tl: ps->revAdj) {
+      PowerSystem& inp = grid->pss[tl->inp];
+      outcomes[tl->id] = Outcome(outcome->loss * tl->loss, outcome->gen, tl);
+
+      if (bestOutcome[inp.id] == nullptr ||
+          bestOutcome[inp.id]->loss > outcomes[tl->id].loss) {
+        bestOutcome[inp.id] = &outcomes[tl->id];
+        q.emplace(&inp, bestOutcome[inp.id]);
       }
     }
   }
