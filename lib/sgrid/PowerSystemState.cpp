@@ -30,6 +30,10 @@ PowerSystemState PowerSystemState::receive(Power amount) const& {
   return PowerSystemState(ps, keeping + amount, used);
 }
 
+Power PowerSystemState::fulfillable() const& {
+  return ps->capacity - used;
+}
+
 std::string PowerSystemState::toString() const& {
   return std::to_string(keeping) + ":" + std::to_string(used);
 }
