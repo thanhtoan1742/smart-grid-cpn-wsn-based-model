@@ -13,13 +13,12 @@ struct Power {
   Power operator+(Power const& other) const&;
   Power operator-(Power const& other) const&;
   Power operator*(Percentage const& percentage) const&;
+  Power operator/(Percentage const& percentage) const&;
   void  operator+=(Power const& other) &;
   void  operator-=(Power const& other) &;
   void  operator*=(Percentage const& other) &;
 
   bool operator<(Power const& other) const&;
-
-  Power compensateLoss(Percentage const& percentage) const&;
 
   operator u64() const&;
 
