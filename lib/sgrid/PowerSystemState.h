@@ -1,11 +1,11 @@
 #ifndef SGRID_CARRIER_STATE_H
 #define SGRID_CARRIER_STATE_H
 
-#include <functional>
-
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
+
+#include <functional>
 
 namespace sgrid {
 

@@ -1,10 +1,10 @@
 #ifndef SGRID_UTILS_H
 #define SGRID_UTILS_H
 
+#include <sgrid/State.h>
+
 #include <iostream>
 #include <vector>
-
-#include <sgrid/State.h>
 
 namespace sgrid {
 

@@ -1,12 +1,12 @@
 #ifndef SGRID_CARRIER_H
 #define SGRID_CARRIER_H
 
-#include <string>
-#include <vector>
-
 #include <sgrid/Power.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/Types.h>
+
+#include <string>
+#include <vector>
 
 namespace sgrid {
 

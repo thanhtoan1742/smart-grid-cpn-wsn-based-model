@@ -1,19 +1,25 @@
-#include "sgrid/Outcome.h"
-#include "sgrid/TransmissionLine.h"
 #include <sgrid/State.h>
 
-#include <iterator>
-#include <limits.h>
-#include <queue>
-#include <string>
-#include <unordered_set>
-#include <vector>
-
+#include <sgrid/Outcome.h>
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
 #include <sgrid/PowerSystemState.h>
+#include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
+
+#include <fmt/core.h>
+#include <fmt/ranges.h>
+
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include <limits.h>
+#include <numeric>
+#include <queue>
+#include <string>
+#include <unordered_set>
+#include <vector>
 
 namespace sgrid {
 
@@ -173,14 +179,15 @@ void State::calculateOutcomes() {
 std::string State::toString() const& {
   if (psStates.empty())
     return "[]";
-  std::string str = "[";
-  for (auto const& psState: psStates)
-    str +=
-        padded(std::to_string(psState.ps->id) + "|" + psState.toString() + " ");
-  str[str.size() - 1] = ']';
-  return str;
+  std::vector<std::string> stateStrs(psStates.size());
+  std::transform(
+      psStates.begin(),
+      psStates.end(),
+      stateStrs.begin(),
+      [](PowerSystemState const& state) { return state.toString(); }
+  );
+  return fmt::format("[{}]", fmt::join(stateStrs, " "));
 }
-
 } // namespace sgrid
 
 std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state

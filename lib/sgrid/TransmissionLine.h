@@ -1,11 +1,11 @@
 #ifndef SGRID_CIRCUIT_BREAKER_H
 #define SGRID_CIRCUIT_BREAKER_H
 
-#include <string>
-
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/Types.h>
+
+#include <string>
 
 namespace sgrid {
 

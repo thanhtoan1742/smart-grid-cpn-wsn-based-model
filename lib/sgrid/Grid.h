@@ -1,12 +1,12 @@
 #ifndef SGRID_GRID_H
 #define SGRID_GRID_H
 
-#include <string>
-#include <vector>
-
 #include <sgrid/Percentage.h>
 #include <sgrid/PowerSystem.h>
 #include <sgrid/TransmissionLine.h>
+
+#include <string>
+#include <vector>
 
 namespace sgrid {
 

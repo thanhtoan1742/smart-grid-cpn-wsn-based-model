@@ -1,11 +1,11 @@
 #ifndef SGRID_STATE_EXPLORER_H
 #define SGRID_STATE_EXPLORER_H
 
-#include <memory>
-
 #include <sgrid/Grid.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/State.h>
+
+#include <memory>
 
 namespace sgrid {
 

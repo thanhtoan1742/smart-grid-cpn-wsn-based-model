@@ -1,12 +1,12 @@
 #include <sgrid/PowerSystem.h>
 
-#include <algorithm>
-#include <limits.h>
-#include <string>
-
 #include <sgrid/Power.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
+
+#include <algorithm>
+#include <limits.h>
+#include <string>
 
 namespace sgrid {
 

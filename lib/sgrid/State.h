@@ -1,14 +1,14 @@
 #ifndef SGRID_STATE_H
 #define SGRID_STATE_H
 
+#include <sgrid/Grid.h>
+#include <sgrid/Outcome.h>
+#include <sgrid/PowerSystemState.h>
+
 #include <cstddef>
 #include <functional>
 #include <ostream>
 #include <string>
-
-#include <sgrid/Grid.h>
-#include <sgrid/Outcome.h>
-#include <sgrid/PowerSystemState.h>
 
 namespace sgrid {
 

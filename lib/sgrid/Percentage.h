@@ -1,10 +1,10 @@
 #ifndef SGRID_PERCENTAGE_H
 #define SGRID_PERCENTAGE_H
 
+#include <sgrid/Types.h>
+
 #include <numeric>
 #include <string>
-
-#include <sgrid/Types.h>
 
 namespace sgrid {
 
