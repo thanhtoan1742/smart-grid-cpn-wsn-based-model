@@ -8,6 +8,9 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
+#include <plog/Initializers/RollingFileInitializer.h>
+#include <plog/Log.h>
+
 #include <iostream>
 #include <queue>
 #include <set>
@@ -207,5 +210,8 @@ int main() {
   // stateExplorer.prettyPrintBestStateTrace();
   // std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
   //           << std::endl;
+
+  plog::init(plog::debug, "Hello.txt"); // Step2: initialize the logger
+  PLOGD << "Hello log!";
   std::cout << State(&grid).toString();
 }
