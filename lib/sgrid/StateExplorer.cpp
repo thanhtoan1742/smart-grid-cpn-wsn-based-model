@@ -9,6 +9,7 @@
 #include <memory>
 #include <numeric>
 #include <queue>
+#include <sstream>
 #include <unordered_set>
 
 namespace sgrid {
@@ -94,31 +95,36 @@ void StateExplorer::generateStateSpace() {
   }
 }
 
-void prettyPrintState(State const& state) {
+void stateToPaddedString(std::stringstream& ss, State const& state) {
   for (i32 i = 0; i < state.depth; ++i)
-    std::cout << " ";
-  std::cout << state.toString() << " ";
-  std::cout << std::endl;
+    ss << " ";
+  ss << state.toString() << " ";
+  ss << std::endl;
 }
 
-void prettyPrintRec(State const& state) {
-  prettyPrintState(state);
+void toPrettyStringRec(std::stringstream& ss, State const& state) {
+  stateToPaddedString(ss, state);
   for (State* child: state.children)
-    prettyPrintRec(*child);
+    toPrettyStringRec(ss, *child);
 }
 
-void StateExplorer::prettyPrint() const& {
+std::string StateExplorer::stateSpaceToString() const& {
   if (stateSpace.empty())
-    return;
-  prettyPrintRec(*stateSpace[0]);
+    return "";
+
+  std::stringstream ss;
+  toPrettyStringRec(ss, *stateSpace[0]);
+  return ss.str();
 }
 
-void StateExplorer::prettyPrintBestStateTrace() const& {
-  State* current = bestState;
+std::string StateExplorer::bestStateTraceToString() const& {
+  std::stringstream ss;
+  State*            current = bestState;
   while (current != nullptr) {
-    prettyPrintState(*current);
+    stateToPaddedString(ss, *current);
     current = current->parent;
   }
+  return ss.str();
 }
 
 } // namespace sgrid

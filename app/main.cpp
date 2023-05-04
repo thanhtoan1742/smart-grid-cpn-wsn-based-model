@@ -8,6 +8,7 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
+#include <fstream>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
@@ -24,7 +25,10 @@
 
 using namespace sgrid;
 
-int main() {
+void initLogger() {
+  std::ofstream ofs("debug.log");
+  ofs << "";
+  ofs.close();
   static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
       "debug.log",
       512 << 20,
@@ -33,6 +37,10 @@ int main() {
   static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
   plog::init(plog::debug, &consoleAppender).addAppender(&fileAppender);
   PLOGI << "APP STARTED";
+}
+
+int main() {
+  initLogger();
 
   // clang-format off
   /*
@@ -194,8 +202,8 @@ int main() {
     .createPowerSystem(3, PowerSystemType::Bus)
     .createPowerSystem(4, PowerSystemType::Bus)
     .createPowerSystem(5, PowerSystemType::Bus)
-    .createPowerSystem(6, PowerSystemType::Generator, 20)
-    .createPowerSystem(7, PowerSystemType::Generator, 20)
+    .createPowerSystem(6, PowerSystemType::Generator, 30)
+    .createPowerSystem(7, PowerSystemType::Generator, 30)
     .createTransmissionLine(0, 3, Power::maxPower, 0)
     .createTransmissionLine(1, 2, Power::maxPower, 0)
     .createTransmissionLine(2, 3, Power::maxPower, 10)
@@ -206,9 +214,9 @@ int main() {
     .createTransmissionLine(5, 6, Power::maxPower, 10)
     .createGrid();
   // clang-format on
+  PLOGD << grid.toString();
 
   // auto s = State(&grid);
-  // debug("GRID\n", grid.toString());
 
   // s.calculateOutcomes();
   // debug("OUTCOME");
@@ -216,13 +224,9 @@ int main() {
   //   debug(outcome.toString());
   // }
 
-  // StateExplorer stateExplorer(&grid, State(&grid));
-  // debug("GRID\n", grid.toString());
-  // stateExplorer.generateStateSpace();
-  // stateExplorer.prettyPrint();
-  // stateExplorer.prettyPrintBestStateTrace();
-  // std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
-  //           << std::endl;
-
-  PLOGD << State(&grid).toString();
+  StateExplorer stateExplorer(&grid, State(&grid));
+  stateExplorer.generateStateSpace();
+  PLOGD << "\n" << stateExplorer.stateSpaceToString();
+  PLOGD << "\n" << stateExplorer.bestStateTraceToString();
+  PLOGD << "State Space Size: " << stateExplorer.stateSpace.size();
 }

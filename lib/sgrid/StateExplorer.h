@@ -19,9 +19,9 @@ struct StateExplorer {
 
   StateExplorer(Grid* grid, State const& initState);
 
-  void generateStateSpace();
-  void prettyPrint() const&;
-  void prettyPrintBestStateTrace() const&;
+  void        generateStateSpace();
+  std::string stateSpaceToString() const&;
+  std::string bestStateTraceToString() const&;
 };
 
 } // namespace sgrid
