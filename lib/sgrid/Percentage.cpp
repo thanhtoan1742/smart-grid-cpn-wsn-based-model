@@ -1,4 +1,5 @@
 #include <sgrid/Percentage.h>
+
 #include <string>
 
 namespace sgrid {

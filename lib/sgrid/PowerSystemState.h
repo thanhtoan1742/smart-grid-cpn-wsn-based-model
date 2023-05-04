@@ -1,11 +1,11 @@
-#ifndef CARRIER_STATE_H
-#define CARRIER_STATE_H
-
-#include <functional>
+#ifndef SGRID_CARRIER_STATE_H
+#define SGRID_CARRIER_STATE_H
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
+
+#include <functional>
 
 namespace sgrid {
 
@@ -28,4 +28,4 @@ struct PowerSystemState {
 };
 
 } // namespace sgrid
-#endif // CARRIER_STATE_H
+#endif // SGRID_CARRIER_STATE_H

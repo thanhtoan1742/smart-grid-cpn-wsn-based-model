@@ -1,10 +1,3 @@
-#include <iostream>
-#include <queue>
-#include <set>
-#include <stack>
-#include <string>
-#include <vector>
-
 #include <sgrid/Grid.h>
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
@@ -14,6 +7,13 @@
 #include <sgrid/StateExplorer.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
+
+#include <iostream>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
 
 using namespace sgrid;
 
@@ -178,8 +178,8 @@ int main() {
     .createPowerSystem(3, PowerSystemType::Bus)
     .createPowerSystem(4, PowerSystemType::Bus)
     .createPowerSystem(5, PowerSystemType::Bus)
-    .createPowerSystem(6, PowerSystemType::Generator, 30)
-    .createPowerSystem(7, PowerSystemType::Generator, 30)
+    .createPowerSystem(6, PowerSystemType::Generator, 20)
+    .createPowerSystem(7, PowerSystemType::Generator, 20)
     .createTransmissionLine(0, 3, Power::maxPower, 0)
     .createTransmissionLine(1, 2, Power::maxPower, 0)
     .createTransmissionLine(2, 3, Power::maxPower, 10)
@@ -200,11 +200,12 @@ int main() {
   //   debug(outcome.toString());
   // }
 
-  StateExplorer stateExplorer(&grid, State(&grid));
+  // StateExplorer stateExplorer(&grid, State(&grid));
   // debug("GRID\n", grid.toString());
-  stateExplorer.generateStateSpace();
+  // stateExplorer.generateStateSpace();
   // stateExplorer.prettyPrint();
-  stateExplorer.prettyPrintBestStateTrace();
-  std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
-            << std::endl;
+  // stateExplorer.prettyPrintBestStateTrace();
+  // std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
+  //           << std::endl;
+  std::cout << State(&grid).toString();
 }

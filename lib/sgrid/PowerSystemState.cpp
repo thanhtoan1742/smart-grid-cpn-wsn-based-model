@@ -1,8 +1,8 @@
 #include <sgrid/PowerSystemState.h>
 
-#include <string>
-
 #include <sgrid/PowerSystem.h>
+
+#include <string>
 
 namespace sgrid {
 

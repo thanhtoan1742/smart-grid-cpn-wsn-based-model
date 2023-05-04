@@ -1,14 +1,14 @@
-#ifndef STATE_H
-#define STATE_H
+#ifndef SGRID_STATE_H
+#define SGRID_STATE_H
+
+#include <sgrid/Grid.h>
+#include <sgrid/Outcome.h>
+#include <sgrid/PowerSystemState.h>
 
 #include <cstddef>
 #include <functional>
 #include <ostream>
 #include <string>
-
-#include <sgrid/Grid.h>
-#include <sgrid/Outcome.h>
-#include <sgrid/PowerSystemState.h>
 
 namespace sgrid {
 
@@ -49,4 +49,4 @@ struct std::hash<sgrid::State> {
   size_t operator()(sgrid::State const& state) const noexcept;
 };
 
-#endif // STATE_H
+#endif // SGRID_STATE_H

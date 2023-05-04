@@ -1,11 +1,11 @@
-#ifndef CIRCUIT_BREAKER_H
-#define CIRCUIT_BREAKER_H
-
-#include <string>
+#ifndef SGRID_CIRCUIT_BREAKER_H
+#define SGRID_CIRCUIT_BREAKER_H
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/Types.h>
+
+#include <string>
 
 namespace sgrid {
 
@@ -24,4 +24,4 @@ struct TransmissionLine {
 };
 
 } // namespace sgrid
-#endif // CIRCUIT_BREAKER_H
+#endif // SGRID_CIRCUIT_BREAKER_H

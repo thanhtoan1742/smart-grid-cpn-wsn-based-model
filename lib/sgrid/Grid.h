@@ -1,12 +1,12 @@
-#ifndef GRID_H
-#define GRID_H
-
-#include <string>
-#include <vector>
+#ifndef SGRID_GRID_H
+#define SGRID_GRID_H
 
 #include <sgrid/Percentage.h>
 #include <sgrid/PowerSystem.h>
 #include <sgrid/TransmissionLine.h>
+
+#include <string>
+#include <vector>
 
 namespace sgrid {
 
@@ -36,4 +36,4 @@ struct GridFactory {
 };
 
 } // namespace sgrid
-#endif // GRID_H
+#endif // SGRID_GRID_H

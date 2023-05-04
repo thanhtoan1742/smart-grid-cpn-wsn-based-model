@@ -1,11 +1,11 @@
-#ifndef STATE_EXPLORER_H
-#define STATE_EXPLORER_H
-
-#include <memory>
+#ifndef SGRID_STATE_EXPLORER_H
+#define SGRID_STATE_EXPLORER_H
 
 #include <sgrid/Grid.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/State.h>
+
+#include <memory>
 
 namespace sgrid {
 
@@ -25,4 +25,4 @@ struct StateExplorer {
 };
 
 } // namespace sgrid
-#endif // STATE_EXPLORER_H
+#endif // SGRID_STATE_EXPLORER_H

@@ -1,10 +1,11 @@
 #include <sgrid/Outcome.h>
 
-#include <fmt/core.h>
-
 #include <sgrid/Percentage.h>
 #include <sgrid/PowerSystem.h>
 #include <sgrid/TransmissionLine.h>
+
+#include <fmt/core.h>
+
 #include <string>
 
 namespace sgrid {

@@ -1,12 +1,12 @@
-#ifndef CARRIER_H
-#define CARRIER_H
-
-#include <string>
-#include <vector>
+#ifndef SGRID_CARRIER_H
+#define SGRID_CARRIER_H
 
 #include <sgrid/Power.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/Types.h>
+
+#include <string>
+#include <vector>
 
 namespace sgrid {
 
@@ -25,4 +25,4 @@ struct PowerSystem {
 };
 
 } // namespace sgrid
-#endif // CARRIER_H
+#endif // SGRID_CARRIER_H
