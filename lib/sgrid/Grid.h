@@ -1,5 +1,5 @@
-#ifndef GRID_H
-#define GRID_H
+#ifndef SGRID_GRID_H
+#define SGRID_GRID_H
 
 #include <string>
 #include <vector>
@@ -36,4 +36,4 @@ struct GridFactory {
 };
 
 } // namespace sgrid
-#endif // GRID_H
+#endif // SGRID_GRID_H

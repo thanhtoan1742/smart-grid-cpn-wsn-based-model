@@ -1,5 +1,5 @@
-#ifndef CARRIER_H
-#define CARRIER_H
+#ifndef SGRID_CARRIER_H
+#define SGRID_CARRIER_H
 
 #include <string>
 #include <vector>
@@ -25,4 +25,4 @@ struct PowerSystem {
 };
 
 } // namespace sgrid
-#endif // CARRIER_H
+#endif // SGRID_CARRIER_H

@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef SGRID_UTILS_H
+#define SGRID_UTILS_H
 
 #include <iostream>
 #include <vector>
@@ -31,4 +31,4 @@ void debug(Ts... args) {
 std::string padded(std::string str, int size = 10, char padder = ' ');
 
 } // namespace sgrid
-#endif // UTILS_H
+#endif // SGRID_UTILS_H

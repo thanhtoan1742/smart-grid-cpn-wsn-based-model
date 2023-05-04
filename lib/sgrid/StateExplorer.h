@@ -1,5 +1,5 @@
-#ifndef STATE_EXPLORER_H
-#define STATE_EXPLORER_H
+#ifndef SGRID_STATE_EXPLORER_H
+#define SGRID_STATE_EXPLORER_H
 
 #include <memory>
 
@@ -25,4 +25,4 @@ struct StateExplorer {
 };
 
 } // namespace sgrid
-#endif // STATE_EXPLORER_H
+#endif // SGRID_STATE_EXPLORER_H

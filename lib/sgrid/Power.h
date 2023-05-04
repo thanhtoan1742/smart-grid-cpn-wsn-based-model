@@ -1,5 +1,5 @@
-#ifndef POWER_H
-#define POWER_H
+#ifndef SGRID_POWER_H
+#define SGRID_POWER_H
 
 #include <sgrid/Percentage.h>
 
@@ -29,4 +29,4 @@ private:
 Power operator""_pu(unsigned long long value);
 
 } // namespace sgrid
-#endif // POWER_H
+#endif // SGRID_POWER_H

@@ -1,5 +1,5 @@
-#ifndef PERCENTAGE_H
-#define PERCENTAGE_H
+#ifndef SGRID_PERCENTAGE_H
+#define SGRID_PERCENTAGE_H
 
 #include <numeric>
 #include <string>
@@ -27,4 +27,4 @@ struct Percentage {
 Percentage operator""_pct(unsigned long long);
 
 } // namespace sgrid
-#endif // PERCENTAGE_H
+#endif // SGRID_PERCENTAGE_H

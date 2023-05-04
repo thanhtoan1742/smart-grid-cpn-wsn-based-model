@@ -1,5 +1,5 @@
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef SGRID_TYPES_H
+#define SGRID_TYPES_H
 
 #include "cstdint"
 
@@ -12,4 +12,4 @@ using u32 = std::uint32_t;
 using u64 = std::uint64_t;
 
 } // namespace sgrid
-#endif // TYPES_H
+#endif // SGRID_TYPES_H

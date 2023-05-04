@@ -1,5 +1,5 @@
-#ifndef OUTCOME_H
-#define OUTCOME_H
+#ifndef SGRID_OUTCOME_H
+#define SGRID_OUTCOME_H
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
@@ -24,4 +24,4 @@ struct Outcome {
 };
 
 } // namespace sgrid
-#endif // OUTCOME_H
+#endif // SGRID_OUTCOME_H

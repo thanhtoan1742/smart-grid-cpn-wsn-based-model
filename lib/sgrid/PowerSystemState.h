@@ -1,5 +1,5 @@
-#ifndef CARRIER_STATE_H
-#define CARRIER_STATE_H
+#ifndef SGRID_CARRIER_STATE_H
+#define SGRID_CARRIER_STATE_H
 
 #include <functional>
 
@@ -28,4 +28,4 @@ struct PowerSystemState {
 };
 
 } // namespace sgrid
-#endif // CARRIER_STATE_H
+#endif // SGRID_CARRIER_STATE_H
