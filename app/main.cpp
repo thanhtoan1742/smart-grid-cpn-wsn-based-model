@@ -8,6 +8,10 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
+#include <plog/Appenders/ColorConsoleAppender.h>
+#include <plog/Appenders/RollingFileAppender.h>
+#include <plog/Formatters/TxtFormatter.h>
+#include <plog/Initializers/ConsoleInitializer.h>
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Log.h>
 
@@ -21,6 +25,15 @@
 using namespace sgrid;
 
 int main() {
+  static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
+      "debug.log",
+      512 << 20,
+      5
+  );
+  static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
+  plog::init(plog::debug, &consoleAppender).addAppender(&fileAppender);
+  PLOGI << "APP STARTED";
+
   // clang-format off
   /*
    *    C0----0-----B3----10----B4----20----G7
@@ -211,7 +224,5 @@ int main() {
   // std::cout << "State Space Size: " << stateExplorer.stateSpace.size()
   //           << std::endl;
 
-  plog::init(plog::debug, "Hello.txt"); // Step2: initialize the logger
-  PLOGD << "Hello log!";
-  std::cout << State(&grid).toString();
+  PLOGD << State(&grid).toString();
 }
