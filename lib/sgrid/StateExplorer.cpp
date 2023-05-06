@@ -4,6 +4,9 @@
 #include <sgrid/Types.h>
 #include <sgrid/utils.h>
 
+#include <fmt/core.h>
+#include <fmt/ranges.h>
+
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -121,9 +124,14 @@ std::string StateExplorer::bestStateTraceToString() const& {
   std::stringstream ss;
   State*            current = bestState;
   while (current != nullptr) {
-    stateToPaddedString(ss, *current);
+    ss << current->toString() << "\n";
     current = current->parent;
   }
+  ss << "[";
+  for (auto const& psState: bestState->psStates)
+    ss << fmt::format("{:<8}", psState.ps->id);
+  ss << "]\n";
+
   return ss.str();
 }
 

@@ -184,7 +184,9 @@ std::string State::toString() const& {
       psStates.begin(),
       psStates.end(),
       stateStrs.begin(),
-      [](PowerSystemState const& state) { return state.toString(); }
+      [](PowerSystemState const& state) {
+        return fmt::format("{:<7}", state.toString());
+      }
   );
   return fmt::format("[{}]", fmt::join(stateStrs, " "));
 }

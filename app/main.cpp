@@ -26,9 +26,9 @@
 using namespace sgrid;
 
 void initLogger() {
-  std::ofstream ofs("debug.log");
-  ofs << "";
-  ofs.close();
+  // std::ofstream ofs("debug.log");
+  // ofs << "";
+  // ofs.close();
   static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
       "debug.log",
       512 << 20,
@@ -195,28 +195,44 @@ int main() {
   //   .createGrid();
 
 
+  // Grid grid = GridFactory()
+  //   .createPowerSystem(0, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(1, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(2, PowerSystemType::Bus)
+  //   .createPowerSystem(3, PowerSystemType::Bus)
+  //   .createPowerSystem(4, PowerSystemType::Bus)
+  //   .createPowerSystem(5, PowerSystemType::Bus)
+  //   .createPowerSystem(6, PowerSystemType::Generator, 20)
+  //   .createPowerSystem(7, PowerSystemType::Generator, 20)
+  //   .createTransmissionLine(0, 3, Power::maxPower, 0)
+  //   .createTransmissionLine(1, 2, Power::maxPower, 0)
+  //   .createTransmissionLine(2, 3, Power::maxPower, 10)
+  //   .createTransmissionLine(3, 4, Power::maxPower, 10)
+  //   .createTransmissionLine(2, 5, Power::maxPower, 30)
+  //   .createTransmissionLine(4, 5, Power::maxPower, 10)
+  //   .createTransmissionLine(4, 7, Power::maxPower, 20)
+  //   .createTransmissionLine(5, 6, Power::maxPower, 10)
+  //   .createGrid();
+
+
+  /*
+   *    C0----30---G2
+   *
+   *    C1----10---G3
+   */
   Grid grid = GridFactory()
     .createPowerSystem(0, PowerSystemType::Consumer, 10)
     .createPowerSystem(1, PowerSystemType::Consumer, 10)
-    .createPowerSystem(2, PowerSystemType::Bus)
-    .createPowerSystem(3, PowerSystemType::Bus)
-    .createPowerSystem(4, PowerSystemType::Bus)
-    .createPowerSystem(5, PowerSystemType::Bus)
-    .createPowerSystem(6, PowerSystemType::Generator, 30)
-    .createPowerSystem(7, PowerSystemType::Generator, 30)
-    .createTransmissionLine(0, 3, Power::maxPower, 0)
-    .createTransmissionLine(1, 2, Power::maxPower, 0)
-    .createTransmissionLine(2, 3, Power::maxPower, 10)
-    .createTransmissionLine(3, 4, Power::maxPower, 10)
-    .createTransmissionLine(2, 5, Power::maxPower, 30)
-    .createTransmissionLine(4, 5, Power::maxPower, 10)
-    .createTransmissionLine(4, 7, Power::maxPower, 20)
-    .createTransmissionLine(5, 6, Power::maxPower, 10)
+    .createPowerSystem(2, PowerSystemType::Generator, 20)
+    .createPowerSystem(3, PowerSystemType::Generator, 20)
+    .createTransmissionLine(0, 2, Power::maxPower, 10)
+    .createTransmissionLine(1, 3, Power::maxPower, 30)
     .createGrid();
   // clang-format on
-  PLOGD << grid.toString();
 
-  // auto s = State(&grid);
+  PLOGD << "\n" << grid.toString();
+
+  State state = State(&grid);
 
   // s.calculateOutcomes();
   // debug("OUTCOME");
@@ -224,9 +240,9 @@ int main() {
   //   debug(outcome.toString());
   // }
 
-  StateExplorer stateExplorer(&grid, State(&grid));
+  StateExplorer stateExplorer(&grid, state);
   stateExplorer.generateStateSpace();
-  PLOGD << "\n" << stateExplorer.stateSpaceToString();
+  // PLOGD << "\n" << stateExplorer.stateSpaceToString();
   PLOGD << "\n" << stateExplorer.bestStateTraceToString();
   PLOGD << "State Space Size: " << stateExplorer.stateSpace.size();
 }
