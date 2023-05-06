@@ -14,9 +14,8 @@ TransmissionLine::TransmissionLine(
 }
 
 std::string TransmissionLine::toString() const& {
-  return std::to_string(id) + ":" + std::to_string(inp) + "--" +
-         std::to_string(capacity) + "|" + loss.toString() + "->" +
-         std::to_string(out);
+  return std::to_string(inp) + "--" + std::to_string(capacity) + "|" +
+         loss.toString() + "->" + std::to_string(out);
 }
 
 } // namespace sgrid
