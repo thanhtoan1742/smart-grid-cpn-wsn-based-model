@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 project(sgrid)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -31,13 +33,13 @@ target_link_libraries(libsgrid fmt)
 target_link_libraries(libsgrid plog)
 
 
-# enable_testing()
-# add_executable(tests tests/correctness.cpp)
-# target_link_libraries(tests GTest::gtest_main)
-# target_link_libraries(tests libsgrid)
-# target_link_libraries(tests fmt)
-# include(GoogleTest)
-# gtest_discover_tests(tests)
+enable_testing()
+add_executable(tests tests/correctness.cpp)
+target_link_libraries(tests GTest::gtest_main)
+target_link_libraries(tests libsgrid)
+target_link_libraries(tests fmt)
+include(GoogleTest)
+gtest_discover_tests(tests)
 
 add_executable(main app/main.cpp)
 target_link_libraries(main libsgrid)
