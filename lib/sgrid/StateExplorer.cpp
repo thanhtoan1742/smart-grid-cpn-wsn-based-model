@@ -6,6 +6,7 @@
 
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include <plog/Log.h>
 
 #include <iostream>
 #include <limits>
@@ -50,6 +51,7 @@ struct CompareState {
 };
 
 void StateExplorer::generateStateSpace() {
+  // PLOGD << "GENERATING STATE SPACE";
   bestState = nullptr;
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
@@ -63,21 +65,19 @@ void StateExplorer::generateStateSpace() {
   while (!q.empty()) {
     State* currentState = q.top();
     q.pop();
-    // debug(
-    //     "PROCESSING STATE",
-    //     "\n",
-    //     !currentState->parent ? "[]" : currentState->parent->toString(),
-    //     "\n",
-    //     currentState->toString(),
-    //     "\n",
-    //     currentState->keeping() + currentState->fulfilled()
-    // );
+    // PLOGD << "PROCESSING STATE"
+    //       << "\n"
+    //       << (!currentState->parent ? "[]" :
+    //       currentState->parent->toString())
+    //       << "\n"
+    //       << currentState->toString() << "\n"
+    //       << currentState->keeping() + currentState->fulfilled();
 
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
 
     if (currentState->satisfied()) {
-      // debug("SATISFIED STATE", currentState->toString());
+      // PLOGD << "SATISFIED STATE\n" << currentState->toString();
       minFulfilled = currentState->fulfilled();
       bestState    = currentState;
       break;
@@ -96,6 +96,7 @@ void StateExplorer::generateStateSpace() {
       nextStatePtr->depth  = currentState->depth + 1;
     }
   }
+  // PLOGD << "FINISHED GENERATING STATE SPACE";
 }
 
 void stateToPaddedString(std::stringstream& ss, State const& state) {

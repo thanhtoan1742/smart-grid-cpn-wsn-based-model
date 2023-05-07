@@ -8,7 +8,6 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
-#include <fstream>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
@@ -16,6 +15,7 @@
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <plog/Log.h>
 
+#include <fstream>
 #include <iostream>
 #include <queue>
 #include <set>
@@ -26,11 +26,13 @@
 using namespace sgrid;
 
 void initLogger() {
-  // std::ofstream ofs("debug.log");
-  // ofs << "";
-  // ofs.close();
+  char const* filename = "test.log";
+
+  std::ofstream ofs(filename);
+  ofs << "";
+  ofs.close();
   static plog::RollingFileAppender<plog::TxtFormatter> fileAppender(
-      "debug.log",
+      filename,
       512 << 20,
       5
   );
@@ -195,24 +197,31 @@ int main() {
   //   .createGrid();
 
 
-  // Grid grid = GridFactory()
-  //   .createPowerSystem(0, PowerSystemType::Consumer, 10)
-  //   .createPowerSystem(1, PowerSystemType::Consumer, 10)
-  //   .createPowerSystem(2, PowerSystemType::Bus)
-  //   .createPowerSystem(3, PowerSystemType::Bus)
-  //   .createPowerSystem(4, PowerSystemType::Bus)
-  //   .createPowerSystem(5, PowerSystemType::Bus)
-  //   .createPowerSystem(6, PowerSystemType::Generator, 20)
-  //   .createPowerSystem(7, PowerSystemType::Generator, 20)
-  //   .createTransmissionLine(0, 3, Power::maxPower, 0)
-  //   .createTransmissionLine(1, 2, Power::maxPower, 0)
-  //   .createTransmissionLine(2, 3, Power::maxPower, 10)
-  //   .createTransmissionLine(3, 4, Power::maxPower, 10)
-  //   .createTransmissionLine(2, 5, Power::maxPower, 30)
-  //   .createTransmissionLine(4, 5, Power::maxPower, 10)
-  //   .createTransmissionLine(4, 7, Power::maxPower, 20)
-  //   .createTransmissionLine(5, 6, Power::maxPower, 10)
-  //   .createGrid();
+  /*
+   *    G20 -- 20 -- B -- 10 -- B -- 0 -- C10
+   *                 |          |
+   *                 10         20
+   *                 |          |
+   *    G20 -- 10 -- B -- 30 -- B -- 0 -- C10
+  */
+  Grid grid = GridFactory()
+    .createPowerSystem(0, PowerSystemType::Consumer, 10)
+    .createPowerSystem(1, PowerSystemType::Consumer, 10)
+    .createPowerSystem(2, PowerSystemType::Bus)
+    .createPowerSystem(3, PowerSystemType::Bus)
+    .createPowerSystem(4, PowerSystemType::Bus)
+    .createPowerSystem(5, PowerSystemType::Bus)
+    .createPowerSystem(6, PowerSystemType::Generator, 20)
+    .createPowerSystem(7, PowerSystemType::Generator, 20)
+    .createTransmissionLine(0, 3, Power::maxPower, 0)
+    .createTransmissionLine(1, 2, Power::maxPower, 0)
+    .createTransmissionLine(2, 3, Power::maxPower, 10)
+    .createTransmissionLine(3, 4, Power::maxPower, 10)
+    .createTransmissionLine(2, 5, Power::maxPower, 30)
+    .createTransmissionLine(4, 5, Power::maxPower, 10)
+    .createTransmissionLine(4, 7, Power::maxPower, 20)
+    .createTransmissionLine(5, 6, Power::maxPower, 10)
+    .createGrid();
 
 
   /*
@@ -220,25 +229,25 @@ int main() {
    *
    *    C1----10---G3
    */
-  Grid grid = GridFactory()
-    .createPowerSystem(0, PowerSystemType::Consumer, 10)
-    .createPowerSystem(1, PowerSystemType::Consumer, 10)
-    .createPowerSystem(2, PowerSystemType::Generator, 20)
-    .createPowerSystem(3, PowerSystemType::Generator, 20)
-    .createTransmissionLine(0, 2, Power::maxPower, 10)
-    .createTransmissionLine(1, 3, Power::maxPower, 30)
-    .createGrid();
+  // Grid grid = GridFactory()
+  //   .createPowerSystem(0, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(1, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(2, PowerSystemType::Generator, 20)
+  //   .createPowerSystem(3, PowerSystemType::Generator, 20)
+  //   .createTransmissionLine(0, 2, Power::maxPower, 10)
+  //   .createTransmissionLine(1, 3, Power::maxPower, 30)
+  //   .createGrid();
   // clang-format on
 
   PLOGD << "\n" << grid.toString();
 
   State state = State(&grid);
 
-  // s.calculateOutcomes();
-  // debug("OUTCOME");
-  // for (auto const& outcome: s.outcomes) {
-  //   debug(outcome.toString());
-  // }
+  state.calculateOutcomes();
+  PLOGD << "OUTCOME";
+  for (auto const& outcome: state.outcomes) {
+    PLOGD << outcome.toString() << " ";
+  }
 
   StateExplorer stateExplorer(&grid, state);
   stateExplorer.generateStateSpace();

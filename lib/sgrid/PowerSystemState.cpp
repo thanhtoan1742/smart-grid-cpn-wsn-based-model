@@ -16,17 +16,23 @@ bool PowerSystemState::operator==(PowerSystemState const& other) const& {
   return keeping == other.keeping && used == other.used;
 }
 
-PowerSystemState PowerSystemState::fulfill() const& {
+void PowerSystemState::fulfill() {
+  Power amount = std::min(ps->capacity - used, keeping);
+  keeping -= amount;
+  used += amount;
+}
+
+PowerSystemState PowerSystemState::fulfilled() const& {
   Power amount = std::min(ps->capacity - used, keeping);
   return PowerSystemState(ps, keeping - amount, used + amount);
 }
 
-PowerSystemState PowerSystemState::send(Power amount) const& {
+PowerSystemState PowerSystemState::sent(Power amount) const& {
   amount = std::min(amount, keeping);
   return PowerSystemState(ps, keeping - amount, used);
 }
 
-PowerSystemState PowerSystemState::receive(Power amount) const& {
+PowerSystemState PowerSystemState::received(Power amount) const& {
   return PowerSystemState(ps, keeping + amount, used);
 }
 
