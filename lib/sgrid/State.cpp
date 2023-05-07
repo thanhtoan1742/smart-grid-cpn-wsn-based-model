@@ -107,25 +107,19 @@ std::vector<State> State::generateNextStates() {
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
-  for (int i = 0; i < grid->pss.size(); ++i) {
-    if (grid->pss[i].pst == PowerSystemType::Generator)
-      uniqueStates.insert(createChildState(i, psStates[i].fulfill()));
-  }
-
   for (int i = 0; i < grid->tls.size(); ++i) {
-    i32        inp  = grid->tls[i].inp;
-    i32        out  = grid->tls[i].out;
-    Percentage loss = grid->tls[i].loss;
-
     Outcome const& outcome = outcomes[grid->tls[i].id];
-    Power          amount  = std::min(
-        psStates[outcome.gen->id].fulfillable() / outcome.loss,
-        psStates[inp].keeping
-    );
+
+    i32        inp  = grid->tls[i].inp;
+    i32        out  = outcome.gen->id;
+    Percentage loss = outcome.loss;
+    Power      amount =
+        std::min(psStates[out].fulfillable() / loss, psStates[inp].keeping);
 
     State nextState(*this);
-    nextState.psStates[inp] = nextState.psStates[inp].send(amount);
-    nextState.psStates[out] = nextState.psStates[out].receive(amount * loss);
+    nextState.psStates[inp] = nextState.psStates[inp].sent(amount);
+    nextState.psStates[out] = nextState.psStates[out].received(amount * loss);
+    nextState.psStates[out].fulfill();
     uniqueStates.insert(nextState);
   }
 

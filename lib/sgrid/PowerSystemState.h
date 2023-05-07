@@ -18,9 +18,10 @@ struct PowerSystemState {
 
   bool operator==(PowerSystemState const& other) const&;
 
-  PowerSystemState fulfill() const&;
-  PowerSystemState send(Power amount) const&;
-  PowerSystemState receive(Power amount) const&;
+  void fulfill();
+  PowerSystemState fulfilled() const&;
+  PowerSystemState sent(Power amount) const&;
+  PowerSystemState received(Power amount) const&;
 
   Power fulfillable() const&;
 
