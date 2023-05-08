@@ -6,15 +6,18 @@
 #include <sgrid/PowerSystem.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
+#include <sgrid/Types.h>
 #include <sgrid/utils.h>
 
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include <plog/Log.h>
 
 #include <algorithm>
 #include <functional>
 #include <iterator>
 #include <limits.h>
+#include <map>
 #include <numeric>
 #include <queue>
 #include <string>
@@ -104,6 +107,7 @@ State State::demand() const& {
 }
 
 std::vector<State> State::generateNextStates() {
+  PLOGD << "GENERATING NEXT STATES";
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
@@ -113,14 +117,22 @@ std::vector<State> State::generateNextStates() {
     i32        inp  = grid->tls[i].inp;
     i32        out  = outcome.gen->id;
     Percentage loss = outcome.loss;
-    Power      amount =
-        std::min(psStates[out].fulfillable() / loss, psStates[inp].keeping);
+    if (psStates[inp].keeping == 0)
+      continue;
+
+    Power amount =
+        std::min(outcome.fulfillable(psStates), psStates[inp].keeping);
 
     State nextState(*this);
     nextState.psStates[inp] = nextState.psStates[inp].sent(amount);
     nextState.psStates[out] = nextState.psStates[out].received(amount * loss);
     nextState.psStates[out].fulfill();
     uniqueStates.insert(nextState);
+  }
+
+  PLOGD << "NEXT STATES";
+  for (State const& nextState: uniqueStates) {
+    PLOGD << nextState;
   }
 
   return std::vector<State>(
@@ -146,6 +158,8 @@ void State::calculateOutcomes() {
     PowerSystem& inp = grid->pss[tl.inp];
     if (gen.pst != PowerSystemType::Generator)
       continue;
+    if (psStates[gen.id].fulfillable() == 0)
+      continue;
     outcomes[tl.id]     = Outcome(tl.loss, &gen, &tl);
     bestOutcome[inp.id] = &outcomes[tl.id];
     q.emplace(&inp, bestOutcome[inp.id]);
@@ -160,6 +174,9 @@ void State::calculateOutcomes() {
     for (TransmissionLine* tl: ps->revAdj) {
       PowerSystem& inp = grid->pss[tl->inp];
       outcomes[tl->id] = Outcome(outcome->loss * tl->loss, outcome->gen, tl);
+
+      if (outcomes[tl->id].fulfillable(psStates) == 0)
+        continue;
 
       if (bestOutcome[inp.id] == nullptr ||
           bestOutcome[inp.id]->loss > outcomes[tl->id].loss) {
@@ -184,6 +201,7 @@ std::string State::toString() const& {
   );
   return fmt::format("[{}]", fmt::join(stateStrs, " "));
 }
+
 } // namespace sgrid
 
 std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state
@@ -194,3 +212,22 @@ std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state
            std::to_string(psState.used) + " ";
   return std::hash<std::string>()(str);
 }
+
+namespace plog {
+Record& operator<<(Record& record, sgrid::State const& state) {
+  static std::map<std::string, int> stateId;
+
+  std::string str = state.toString();
+  int         id  = -1;
+  auto        it  = stateId.find(str);
+  if (it == stateId.end()) {
+    id           = stateId.size();
+    stateId[str] = id;
+  } else
+    id = it->second;
+
+  record << fmt::format("{} __ID_{}_ID__", str, id);
+
+  return record;
+}
+} // namespace plog

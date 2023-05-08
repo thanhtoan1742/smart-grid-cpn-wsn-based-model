@@ -5,6 +5,9 @@
 #include <sgrid/Outcome.h>
 #include <sgrid/PowerSystemState.h>
 
+#include <plog/Log.h>
+#include <plog/Record.h>
+
 #include <cstddef>
 #include <functional>
 #include <ostream>
@@ -48,5 +51,9 @@ template <>
 struct std::hash<sgrid::State> {
   size_t operator()(sgrid::State const& state) const noexcept;
 };
+
+namespace plog {
+Record& operator<<(Record& record, sgrid::State const& state);
+} // namespace plog
 
 #endif // SGRID_STATE_H

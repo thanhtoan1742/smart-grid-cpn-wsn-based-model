@@ -93,29 +93,29 @@ int main() {
    *    C2-----------B5----------G8
    *
    * */
-  // Grid grid = GridFactory()
-  //   .createPowerSystem(0, PowerSystemType::Consumer, 50)
-  //   .createPowerSystem(1, PowerSystemType::Consumer, 50)
-  //   .createPowerSystem(2, PowerSystemType::Consumer, 50)
-  //   .createPowerSystem(3, PowerSystemType::Bus)
-  //   .createPowerSystem(4, PowerSystemType::Bus)
-  //   .createPowerSystem(5, PowerSystemType::Bus)
-  //   .createPowerSystem(6, PowerSystemType::Bus)
-  //   .createPowerSystem(7, PowerSystemType::Bus)
-  //   .createPowerSystem(8, PowerSystemType::Generator, 50)
-  //   .createPowerSystem(9, PowerSystemType::Generator, 120)
-  //   .createPowerSystem(10, PowerSystemType::Generator, 30)
-  //   .createTransmissionLine(0, 3, Power::maxPower, 5)
-  //   .createTransmissionLine(3, 6, Power::maxPower, 5)
-  //   .createTransmissionLine(6, 10, Power::maxPower, 5)
-  //   .createTransmissionLine(3, 7, Power::maxPower, 5)
-  //   .createTransmissionLine(7, 9, Power::maxPower, 5)
-  //   .createTransmissionLine(7, 4, Power::maxPower, 5)
-  //   .createTransmissionLine(4, 1, Power::maxPower, 5)
-  //   .createTransmissionLine(4, 5, Power::maxPower, 5)
-  //   .createTransmissionLine(2, 5, Power::maxPower, 5)
-  //   .createTransmissionLine(8, 5, Power::maxPower, 5)
-  //   .createGrid();
+  Grid grid = GridFactory()
+    .createPowerSystem(0, PowerSystemType::Consumer, 50)
+    .createPowerSystem(1, PowerSystemType::Consumer, 50)
+    .createPowerSystem(2, PowerSystemType::Consumer, 50)
+    .createPowerSystem(3, PowerSystemType::Bus)
+    .createPowerSystem(4, PowerSystemType::Bus)
+    .createPowerSystem(5, PowerSystemType::Bus)
+    .createPowerSystem(6, PowerSystemType::Bus)
+    .createPowerSystem(7, PowerSystemType::Bus)
+    .createPowerSystem(8, PowerSystemType::Generator, 50)
+    .createPowerSystem(9, PowerSystemType::Generator, 120)
+    .createPowerSystem(10, PowerSystemType::Generator, 30)
+    .createTransmissionLine(0, 3, Power::maxPower, 5)
+    .createTransmissionLine(3, 6, Power::maxPower, 5)
+    .createTransmissionLine(6, 10, Power::maxPower, 5)
+    .createTransmissionLine(3, 7, Power::maxPower, 5)
+    .createTransmissionLine(7, 9, Power::maxPower, 5)
+    .createTransmissionLine(7, 4, Power::maxPower, 5)
+    .createTransmissionLine(4, 1, Power::maxPower, 5)
+    .createTransmissionLine(4, 5, Power::maxPower, 5)
+    .createTransmissionLine(2, 5, Power::maxPower, 5)
+    .createTransmissionLine(8, 5, Power::maxPower, 5)
+    .createGrid();
 
   // Grid grid = Grid{
   //     {
@@ -204,24 +204,24 @@ int main() {
    *                 |          |
    *    G20 -- 10 -- B -- 30 -- B -- 0 -- C10
   */
-  Grid grid = GridFactory()
-    .createPowerSystem(0, PowerSystemType::Consumer, 10)
-    .createPowerSystem(1, PowerSystemType::Consumer, 10)
-    .createPowerSystem(2, PowerSystemType::Bus)
-    .createPowerSystem(3, PowerSystemType::Bus)
-    .createPowerSystem(4, PowerSystemType::Bus)
-    .createPowerSystem(5, PowerSystemType::Bus)
-    .createPowerSystem(6, PowerSystemType::Generator, 20)
-    .createPowerSystem(7, PowerSystemType::Generator, 20)
-    .createTransmissionLine(0, 3, Power::maxPower, 0)
-    .createTransmissionLine(1, 2, Power::maxPower, 0)
-    .createTransmissionLine(2, 3, Power::maxPower, 10)
-    .createTransmissionLine(3, 4, Power::maxPower, 10)
-    .createTransmissionLine(2, 5, Power::maxPower, 30)
-    .createTransmissionLine(4, 5, Power::maxPower, 10)
-    .createTransmissionLine(4, 7, Power::maxPower, 20)
-    .createTransmissionLine(5, 6, Power::maxPower, 10)
-    .createGrid();
+  // Grid grid = GridFactory()
+  //   .createPowerSystem(0, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(1, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(2, PowerSystemType::Bus)
+  //   .createPowerSystem(3, PowerSystemType::Bus)
+  //   .createPowerSystem(4, PowerSystemType::Bus)
+  //   .createPowerSystem(5, PowerSystemType::Bus)
+  //   .createPowerSystem(6, PowerSystemType::Generator, 20)
+  //   .createPowerSystem(7, PowerSystemType::Generator, 20)
+  //   .createTransmissionLine(0, 3, Power::maxPower, 0)
+  //   .createTransmissionLine(1, 2, Power::maxPower, 0)
+  //   .createTransmissionLine(2, 3, Power::maxPower, 10)
+  //   .createTransmissionLine(3, 4, Power::maxPower, 10)
+  //   .createTransmissionLine(2, 5, Power::maxPower, 30)
+  //   .createTransmissionLine(4, 5, Power::maxPower, 10)
+  //   .createTransmissionLine(4, 7, Power::maxPower, 20)
+  //   .createTransmissionLine(5, 6, Power::maxPower, 10)
+  //   .createGrid();
 
 
   /*
@@ -243,15 +243,16 @@ int main() {
 
   State state = State(&grid);
 
-  state.calculateOutcomes();
-  PLOGD << "OUTCOME";
-  for (auto const& outcome: state.outcomes) {
-    PLOGD << outcome.toString() << " ";
-  }
+  // state.calculateOutcomes();
+  // PLOGD << "OUTCOME";
+  // for (auto const& outcome: state.outcomes) {
+  //   PLOGD << outcome.toString() << " ";
+  // }
 
   StateExplorer stateExplorer(&grid, state);
   stateExplorer.generateStateSpace();
   // PLOGD << "\n" << stateExplorer.stateSpaceToString();
   PLOGD << "\n" << stateExplorer.bestStateTraceToString();
+  PLOGD << "Minimum Fulfilled: " << stateExplorer.minFulfilled;
   PLOGD << "State Space Size: " << stateExplorer.stateSpace.size();
 }

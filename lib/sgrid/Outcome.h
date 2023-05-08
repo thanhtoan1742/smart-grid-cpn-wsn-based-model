@@ -4,6 +4,7 @@
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
+#include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/Types.h>
 
@@ -19,6 +20,9 @@ struct Outcome {
       PowerSystem*      gen  = nullptr,
       TransmissionLine* tl   = nullptr
   );
+
+  Power fulfillable(PowerSystemState const& genState) const&;
+  Power fulfillable(std::vector<PowerSystemState> const& psStates) const&;
 
   std::string toString() const&;
 };

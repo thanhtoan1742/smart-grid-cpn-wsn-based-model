@@ -28,15 +28,20 @@ void setKU(State& state, i32 idx, Power keeping, Power used) {
 
 TEST(Correctness, SimpleOneOnOne) {
 
-  Grid grid = Grid{
-      {
-       PowerSystem(0, PowerSystemType::Consumer, 10),
-       PowerSystem(1, PowerSystemType::Generator, 20),
-       },
-      {
-       TransmissionLine(0, 0, 1, Power::maxPower, 10),
-       }
-  };
+  // Grid grid = Grid{
+  //     {
+  //      PowerSystem(0, PowerSystemType::Consumer, 10),
+  //      PowerSystem(1, PowerSystemType::Generator, 20),
+  //      },
+  //     {
+  //      TransmissionLine(0, 0, 1, Power::maxPower, 10),
+  //      }
+  // };
+  Grid grid = GridFactory()
+                  .createPowerSystem(0, PowerSystemType::Consumer, 10)
+                  .createPowerSystem(1, PowerSystemType::Generator, 20)
+                  .createTransmissionLine(0, 1, Power::maxPower, 10)
+                  .createGrid();
   StateExplorer stateExplorer(&grid, State(&grid));
   stateExplorer.generateStateSpace();
   State& got = *stateExplorer.bestState;
