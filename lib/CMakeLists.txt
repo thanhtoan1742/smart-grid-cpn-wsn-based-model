@@ -11,6 +11,7 @@ target_sources(
     sgrid/TransmissionLine.cpp
     sgrid/Grid.cpp
     sgrid/PowerSystemState.cpp
+    sgrid/TransmissionLineState.cpp
     sgrid/State.cpp
     sgrid/Outcome.cpp
     sgrid/StateExplorer.cpp
