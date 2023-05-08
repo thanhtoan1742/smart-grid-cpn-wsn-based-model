@@ -26,7 +26,7 @@ void setKU(State& state, i32 idx, Power keeping, Power used) {
   state.psStates[idx].used    = used;
 }
 
-TEST(Correctness, SimpleOneOnOne) {
+TEST(MinFulfilled, SimpleOneOnOne) {
 
   // Grid grid = Grid{
   //     {
@@ -50,7 +50,7 @@ TEST(Correctness, SimpleOneOnOne) {
   EXPECT_EQ(got, expect);
 }
 
-TEST(Correctness, Simple3Nodes) {
+TEST(MinFulfilled, Simple3Nodes) {
 
   Grid grid = GridFactory()
                   .createPowerSystem(0, PowerSystemType::Consumer, 10)
@@ -67,7 +67,7 @@ TEST(Correctness, Simple3Nodes) {
   EXPECT_EQ(got, expect);
 }
 
-TEST(Correctness, Complex) {
+TEST(MinFulfilled, Complex) {
   Grid grid = GridFactory()
                   .createPowerSystem(0, PowerSystemType::Consumer, 50)
                   .createPowerSystem(1, PowerSystemType::Consumer, 50)
@@ -97,11 +97,6 @@ TEST(Correctness, Complex) {
   Power expect = 173;
 
   EXPECT_EQ(got, expect);
-}
-
-int main(int argc, char** argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
 }
 
 } // namespace sgrid
