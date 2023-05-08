@@ -26,7 +26,6 @@ struct State {
   std::vector<State*> children;
 
   State(Grid* grid);
-  State(Grid* grid, std::vector<PowerSystemState> const& psStates);
 
   bool operator==(State const& other) const&;
 

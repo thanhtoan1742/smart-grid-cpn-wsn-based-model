@@ -2,13 +2,14 @@
 #define SGRID_CARRIER_H
 
 #include <sgrid/Power.h>
-#include <sgrid/TransmissionLine.h>
 #include <sgrid/Types.h>
 
 #include <string>
 #include <vector>
 
 namespace sgrid {
+
+struct TransmissionLine;
 
 enum struct PowerSystemType { Generator = 'G', Consumer = 'C', Bus = 'B' };
 

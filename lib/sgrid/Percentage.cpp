@@ -1,5 +1,7 @@
 #include <sgrid/Percentage.h>
 
+#include <fmt/core.h>
+
 #include <string>
 
 namespace sgrid {
@@ -30,7 +32,7 @@ bool Percentage::operator==(Percentage other) {
 }
 
 std::string Percentage::toString() const& {
-  return std::to_string(value);
+  return fmt::format("{}%", value);
 }
 
 Percentage operator""_pct(unsigned long long value) {
