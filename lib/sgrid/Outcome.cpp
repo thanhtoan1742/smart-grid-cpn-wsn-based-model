@@ -12,8 +12,14 @@
 
 namespace sgrid {
 
-Outcome::Outcome(Percentage _loss, PowerSystem* _gen, TransmissionLine* _tl)
-    : loss(_loss), gen(_gen), tl(_tl) {
+Outcome::Outcome(
+    TransmissionLine* _tl,
+    PowerSystem*      _gen,
+    Percentage        _loss,
+    TransmissionLine* _capTl,
+    Percentage        _capTlLoss
+)
+    : tl(_tl), gen(_gen), loss(_loss), capTl(_capTl), capTlLoss(_capTlLoss) {
 }
 
 Power Outcome::fulfillable(PowerSystemState const& genState) const& {

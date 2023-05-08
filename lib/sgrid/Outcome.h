@@ -11,14 +11,19 @@
 namespace sgrid {
 
 struct Outcome {
-  Percentage        loss;
-  PowerSystem*      gen;
   TransmissionLine* tl;
+  PowerSystem*      gen;
+  Percentage        loss;
+  TransmissionLine* capTl;
+  Percentage        capTlLoss;
 
   Outcome(
-      Percentage        loss = 0,
+      TransmissionLine* tl   = nullptr,
       PowerSystem*      gen  = nullptr,
-      TransmissionLine* tl   = nullptr
+      Percentage        loss = 0,
+      // transmission line that have capacity limit the transmission amount
+      TransmissionLine* capTl     = nullptr,
+      Percentage        capTlLoss = 0
   );
 
   Power fulfillable(PowerSystemState const& genState) const&;

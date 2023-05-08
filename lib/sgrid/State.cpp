@@ -124,8 +124,8 @@ std::vector<State> State::generateNextStates() {
         std::min(outcome.fulfillable(psStates), psStates[inp].keeping);
 
     State nextState(*this);
-    nextState.psStates[inp] = nextState.psStates[inp].sent(amount);
-    nextState.psStates[out] = nextState.psStates[out].received(amount * loss);
+    nextState.psStates[inp].send(amount);
+    nextState.psStates[out].receive(amount * loss);
     nextState.psStates[out].fulfill();
     uniqueStates.insert(nextState);
   }
@@ -160,7 +160,7 @@ void State::calculateOutcomes() {
       continue;
     if (psStates[gen.id].fulfillable() == 0)
       continue;
-    outcomes[tl.id]     = Outcome(tl.loss, &gen, &tl);
+    outcomes[tl.id]     = Outcome(&tl, &gen, tl.loss);
     bestOutcome[inp.id] = &outcomes[tl.id];
     q.emplace(&inp, bestOutcome[inp.id]);
   }
@@ -173,7 +173,7 @@ void State::calculateOutcomes() {
 
     for (TransmissionLine* tl: ps->revAdj) {
       PowerSystem& inp = grid->pss[tl->inp];
-      outcomes[tl->id] = Outcome(outcome->loss * tl->loss, outcome->gen, tl);
+      outcomes[tl->id] = Outcome(tl, outcome->gen, outcome->loss * tl->loss);
 
       if (outcomes[tl->id].fulfillable(psStates) == 0)
         continue;
