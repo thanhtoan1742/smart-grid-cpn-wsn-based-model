@@ -36,8 +36,7 @@ struct State {
   Power needFulfilled() const&;
   Power keeping() const&;
 
-  State createChildState(i32 idx, PowerSystemState const& psState) const&;
-  State demand() const&;
+  State              demand() const&;
   std::vector<State> generateNextStates();
 
   void calculateOutcomes();

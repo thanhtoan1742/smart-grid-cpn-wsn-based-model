@@ -90,13 +90,6 @@ Power State::keeping() const& {
   return res;
 }
 
-State State::createChildState(i32 idx, PowerSystemState const& newPsState)
-    const& {
-  std::vector<PowerSystemState> newPsStates(psStates);
-  newPsStates[idx] = std::move(newPsState);
-  return State(grid, newPsStates);
-}
-
 State State::demand() const& {
   State newState(*this);
   for (auto& psState: newState.psStates)
@@ -208,11 +201,7 @@ std::string State::toString() const& {
 
 std::size_t std::hash<sgrid::State>::operator()(sgrid::State const& state
 ) const noexcept {
-  std::string str;
-  for (auto const& psState: state.psStates)
-    str += std::to_string(psState.keeping) + ":" +
-           std::to_string(psState.used) + " ";
-  return std::hash<std::string>()(str);
+  return std::hash<std::string>()(state.toString());
 }
 
 namespace plog {
