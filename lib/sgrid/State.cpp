@@ -20,6 +20,7 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <sstream>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -190,16 +191,17 @@ void State::calculateOutcomes() {
 std::string State::toString() const& {
   if (psStates.empty())
     return "[]";
-  std::vector<std::string> stateStrs(psStates.size());
-  std::transform(
-      psStates.begin(),
-      psStates.end(),
-      stateStrs.begin(),
-      [](PowerSystemState const& state) {
-        return fmt::format("{:<7}", state.toString());
-      }
-  );
-  return fmt::format("[{}]", fmt::join(stateStrs, " "));
+
+  std::stringstream ss;
+  ss << "[";
+  for (PowerSystemState const& psState: psStates) {
+    if (psState.ps->pst != PowerSystemType::Consumer &&
+        psState.ps->pst != PowerSystemType::Generator)
+      continue;
+    ss << fmt::format("{:<8}", psState.toString());
+  }
+  ss << "]";
+  return ss.str();
 }
 
 } // namespace sgrid

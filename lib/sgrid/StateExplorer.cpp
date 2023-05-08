@@ -133,8 +133,12 @@ std::string StateExplorer::bestStateTraceToString() const& {
     current = current->parent;
   }
   ss << "[";
-  for (auto const& psState: bestState->psStates)
+  for (auto const& psState: bestState->psStates) {
+    if (psState.ps->pst != PowerSystemType::Consumer &&
+        psState.ps->pst != PowerSystemType::Generator)
+      continue;
     ss << fmt::format("{:<8}", psState.ps->id);
+  }
   ss << "]\n";
 
   return ss.str();
