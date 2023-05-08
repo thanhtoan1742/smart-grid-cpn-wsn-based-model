@@ -51,17 +51,7 @@ TEST(Correctness, SimpleOneOnOne) {
 }
 
 TEST(Correctness, Simple3Nodes) {
-  // Grid grid = Grid{
-  //     {
-  //      PowerSystem(0, PowerSystemType::Consumer, 10),
-  //      PowerSystem(1, PowerSystemType::Bus),
-  //      PowerSystem(2, PowerSystemType::Generator, 20),
-  //      },
-  //     {
-  //      TransmissionLine(0, 0, 1, Power::maxPower, 10),
-  //      TransmissionLine(1, 1, 2, Power::maxPower, 10),
-  //      }
-  // };
+
   Grid grid = GridFactory()
                   .createPowerSystem(0, PowerSystemType::Consumer, 10)
                   .createPowerSystem(1, PowerSystemType::Bus)
@@ -73,6 +63,38 @@ TEST(Correctness, Simple3Nodes) {
   stateExplorer.generateStateSpace();
   Power got    = stateExplorer.minFulfilled;
   Power expect = 13;
+
+  EXPECT_EQ(got, expect);
+}
+
+TEST(Correctness, Complex) {
+  Grid grid = GridFactory()
+                  .createPowerSystem(0, PowerSystemType::Consumer, 50)
+                  .createPowerSystem(1, PowerSystemType::Consumer, 50)
+                  .createPowerSystem(2, PowerSystemType::Consumer, 50)
+                  .createPowerSystem(3, PowerSystemType::Bus)
+                  .createPowerSystem(4, PowerSystemType::Bus)
+                  .createPowerSystem(5, PowerSystemType::Bus)
+                  .createPowerSystem(6, PowerSystemType::Bus)
+                  .createPowerSystem(7, PowerSystemType::Bus)
+                  .createPowerSystem(8, PowerSystemType::Generator, 50)
+                  .createPowerSystem(9, PowerSystemType::Generator, 120)
+                  .createPowerSystem(10, PowerSystemType::Generator, 30)
+                  .createTransmissionLine(0, 3, Power::maxPower, 5)
+                  .createTransmissionLine(3, 6, Power::maxPower, 5)
+                  .createTransmissionLine(6, 10, Power::maxPower, 5)
+                  .createTransmissionLine(3, 7, Power::maxPower, 5)
+                  .createTransmissionLine(7, 9, Power::maxPower, 5)
+                  .createTransmissionLine(7, 4, Power::maxPower, 5)
+                  .createTransmissionLine(4, 1, Power::maxPower, 5)
+                  .createTransmissionLine(4, 5, Power::maxPower, 5)
+                  .createTransmissionLine(2, 5, Power::maxPower, 5)
+                  .createTransmissionLine(8, 5, Power::maxPower, 5)
+                  .createGrid();
+  StateExplorer stateExplorer(&grid, State(&grid));
+  stateExplorer.generateStateSpace();
+  Power got    = stateExplorer.minFulfilled;
+  Power expect = 173;
 
   EXPECT_EQ(got, expect);
 }
