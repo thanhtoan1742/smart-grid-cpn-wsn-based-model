@@ -137,7 +137,7 @@ std::string StateExplorer::bestStateTraceToString() const& {
     if (psState.ps->pst != PowerSystemType::Consumer &&
         psState.ps->pst != PowerSystemType::Generator)
       continue;
-    ss << fmt::format("{:<8}", psState.ps->id);
+    ss << fmt::format(stateElementFormat, psState.ps->id);
   }
   ss << "]\n";
 

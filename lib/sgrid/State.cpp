@@ -198,7 +198,7 @@ std::string State::toString() const& {
     if (psState.ps->pst != PowerSystemType::Consumer &&
         psState.ps->pst != PowerSystemType::Generator)
       continue;
-    ss << fmt::format("{:<8}", psState.toString());
+    ss << fmt::format(stateElementFormat, psState.toString());
   }
   ss << "]";
   return ss.str();
