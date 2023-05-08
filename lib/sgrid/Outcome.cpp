@@ -1,8 +1,8 @@
-#include "sgrid/PowerSystemState.h"
 #include <sgrid/Outcome.h>
 
 #include <sgrid/Percentage.h>
 #include <sgrid/PowerSystem.h>
+#include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
 
 #include <fmt/core.h>
