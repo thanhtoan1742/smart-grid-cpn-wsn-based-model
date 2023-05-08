@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <limits>
+#include <map>
 #include <memory>
 #include <numeric>
 #include <queue>
@@ -19,7 +20,7 @@
 namespace sgrid {
 
 StateExplorer::StateExplorer(Grid* _grid, State const& _initState)
-    : grid(_grid), initState(_initState) {
+    : grid(_grid), initState(_initState), minFulfilled(Power::maxPower) {
 }
 
 struct CompareState {
@@ -51,7 +52,7 @@ struct CompareState {
 };
 
 void StateExplorer::generateStateSpace() {
-  // PLOGD << "GENERATING STATE SPACE";
+  PLOGD << "GENERATING STATE SPACE";
   bestState = nullptr;
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
@@ -65,19 +66,19 @@ void StateExplorer::generateStateSpace() {
   while (!q.empty()) {
     State* currentState = q.top();
     q.pop();
-    // PLOGD << "PROCESSING STATE"
-    //       << "\n"
-    //       << (!currentState->parent ? "[]" :
-    //       currentState->parent->toString())
-    //       << "\n"
-    //       << currentState->toString() << "\n"
-    //       << currentState->keeping() + currentState->fulfilled();
+    PLOGD << "PROCESSING STATE"
+          << "\n"
+          << (!currentState->parent ? *currentState : *currentState->parent)
+          << "\n"
+          << *currentState << "\n"
+          << "keeping + fulfiled = "
+          << currentState->keeping() + currentState->fulfilled();
 
     if (currentState->keeping() + currentState->fulfilled() >= minFulfilled)
       continue;
 
     if (currentState->satisfied()) {
-      // PLOGD << "SATISFIED STATE\n" << currentState->toString();
+      PLOGD << "SATISFIED STATE\n" << *currentState;
       minFulfilled = currentState->fulfilled();
       bestState    = currentState;
       break;
@@ -96,7 +97,7 @@ void StateExplorer::generateStateSpace() {
       nextStatePtr->depth  = currentState->depth + 1;
     }
   }
-  // PLOGD << "FINISHED GENERATING STATE SPACE";
+  PLOGD << "FINISHED GENERATING STATE SPACE";
 }
 
 void stateToPaddedString(std::stringstream& ss, State const& state) {
@@ -122,6 +123,9 @@ std::string StateExplorer::stateSpaceToString() const& {
 }
 
 std::string StateExplorer::bestStateTraceToString() const& {
+  if (bestState == nullptr)
+    return "NO SATISIFIED STATE";
+
   std::stringstream ss;
   State*            current = bestState;
   while (current != nullptr) {
