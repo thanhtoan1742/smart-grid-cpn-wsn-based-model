@@ -8,6 +8,7 @@
 #include <fmt/core.h>
 #include <plog/Log.h>
 
+#include <algorithm>
 #include <cassert>
 #include <vector>
 
@@ -96,11 +97,6 @@ Grid GridFactory::createGrid() {
     createTransmissionLine(tl->out->id, tl->inp->id, tl->capacity, tl->loss);
   }
 
-  for (i32 i = 0; i < tls.size(); ++i) {
-    tls[i]->id   = i;
-    tls[i]->loss = tls[i]->loss + 100_pct;
-  }
-
   // for current implementation of State.h, make sure GENs and CONs are at the
   // beginning.
   i32 psId = 0;
@@ -111,6 +107,21 @@ Grid GridFactory::createGrid() {
     for (auto ps: pss)
       if (ps->pst == pst)
         ps->id = psId++;
+
+  sort(pss.begin(), pss.end(), [](PowerSystem* a, PowerSystem* b) {
+    return a->id < b->id;
+  });
+  sort(tls.begin(), tls.end(), [](TransmissionLine* a, TransmissionLine* b) {
+    if (a->inp->id == b->inp->id)
+      return a->out->id < b->out->id;
+    else
+      return a->inp->id < b->inp->id;
+  });
+
+  for (i32 i = 0; i < tls.size(); ++i) {
+    tls[i]->id   = i;
+    tls[i]->loss = tls[i]->loss + 100_pct;
+  }
 
   return Grid(std::move(pss), std::move(tls));
 }
