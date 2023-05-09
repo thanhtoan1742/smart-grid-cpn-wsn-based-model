@@ -22,8 +22,8 @@
 namespace sgrid {
 
 void setKU(State& state, i32 idx, Power keeping, Power used) {
-  state.psStates[idx].keeping = keeping;
-  state.psStates[idx].used    = used;
+  state.psStates[idx]->keeping = keeping;
+  state.psStates[idx]->used    = used;
 }
 
 TEST(MinFulfilled, SimpleOneOnOne) {

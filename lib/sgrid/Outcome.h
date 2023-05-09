@@ -1,6 +1,7 @@
 #ifndef SGRID_OUTCOME_H
 #define SGRID_OUTCOME_H
 
+#include "sgrid/TransmissionLineState.h"
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
@@ -10,24 +11,33 @@
 
 namespace sgrid {
 
+struct State;
+
 struct Outcome {
+  State*            state;
   TransmissionLine* tl;
+
   PowerSystem*      gen;
   Percentage        loss;
-  TransmissionLine* capTl;
-  Percentage        capTlLoss;
+  TransmissionLine* congestedTl;
+  Percentage        congestedTlLoss;
+
+  Outcome* trace;
 
   Outcome(
-      TransmissionLine* tl   = nullptr,
-      PowerSystem*      gen  = nullptr,
-      Percentage        loss = 0,
-      // transmission line that have capacity limit the transmission amount
-      TransmissionLine* capTl     = nullptr,
-      Percentage        capTlLoss = 0
+      State*            state,
+      TransmissionLine* tl,
+      PowerSystem*      gen,
+      Percentage        loss,
+      TransmissionLine* congestedTl,
+      Percentage        congestedTlLoss,
+      Outcome*          trace = nullptr
   );
 
-  Power fulfillable(PowerSystemState const& genState) const&;
-  Power fulfillable(std::vector<PowerSystemState> const& psStates) const&;
+  Power fulfillable(
+      PowerSystemState* genState, TransmissionLineState* congestedTlState
+  ) const&;
+  Power fulfillable() const&;
 
   std::string toString() const&;
 };

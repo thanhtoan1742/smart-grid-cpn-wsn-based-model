@@ -4,6 +4,7 @@
 #include <sgrid/Grid.h>
 #include <sgrid/Outcome.h>
 #include <sgrid/PowerSystemState.h>
+#include <sgrid/TransmissionLineState.h>
 
 #include <plog/Log.h>
 #include <plog/Record.h>
@@ -16,16 +17,18 @@
 namespace sgrid {
 
 struct State {
-  Grid*                         grid;
-  std::vector<PowerSystemState> psStates;
-
-  std::vector<Outcome> outcomes;
+  Grid*                               grid;
+  std::vector<PowerSystemState*>      psStates;
+  std::vector<TransmissionLineState*> tlStates;
+  std::vector<Outcome*>               outcomes;
 
   i32                 depth;
   State*              parent;
   std::vector<State*> children;
 
   State(Grid* grid);
+  State(State const& original);
+  ~State();
 
   bool operator==(State const& other) const&;
 
@@ -35,7 +38,7 @@ struct State {
   Power needFulfilled() const&;
   Power keeping() const&;
 
-  State              demand() const&;
+  void               demand();
   std::vector<State> generateNextStates();
 
   void calculateOutcomes();

@@ -6,6 +6,7 @@
 #include <sgrid/PowerSystem.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
+#include <sgrid/TransmissionLineState.h>
 #include <sgrid/Types.h>
 #include <sgrid/utils.h>
 
@@ -28,26 +29,56 @@
 namespace sgrid {
 
 State::State(Grid* _grid)
-    : grid(_grid), depth(0), parent(nullptr), outcomes(_grid->tls.size()) {
+    : grid(_grid),
+      outcomes(_grid->tls.size(), nullptr),
+      depth(0),
+      parent(nullptr) {
+  // TODO: only create state for GEN and CON
   for (auto ps: grid->pss)
-    psStates.emplace_back(ps);
+    psStates.push_back(new PowerSystemState(ps));
+  for (auto tl: grid->tls)
+    tlStates.push_back(new TransmissionLineState(tl));
+}
+
+State::State(State const& original)
+    : grid(original.grid),
+      outcomes(original.grid->tls.size(), nullptr),
+      depth(0),
+      parent(nullptr) {
+  for (auto psState: original.psStates)
+    psStates.push_back(new PowerSystemState(*psState));
+  for (auto tlState: original.tlStates)
+    tlStates.push_back(new TransmissionLineState(*tlState));
+}
+
+State::~State() {
+  for (auto psState: psStates)
+    delete psState;
+  for (auto tlState: tlStates)
+    delete tlState;
+  for (auto outcome: outcomes)
+    delete outcome;
 }
 
 bool State::operator==(State const& other) const& {
-  if (psStates.size() != other.psStates.size())
+  if (psStates.size() != other.psStates.size() ||
+      tlStates.size() != other.tlStates.size())
     return false;
   for (int i = 0; i < psStates.size(); ++i)
-    if (psStates[i] != other.psStates[i])
+    if (*psStates[i] != *other.psStates[i])
+      return false;
+  for (int i = 0; i < tlStates.size(); ++i)
+    if (*tlStates[i] != *other.tlStates[i])
       return false;
   return true;
 }
 
 bool State::satisfied() const& {
-  for (int i = 0; i < grid->pss.size(); ++i) {
-    PowerSystem* ps = grid->pss[i];
-    if (ps->pst == PowerSystemType::Consumer && psStates[i].used < ps->capacity)
+  for (auto psState: psStates) {
+    if (psState->ps->pst == PowerSystemType::Consumer &&
+        psState->used < psState->keeping)
       return false;
-    if (psStates[i].keeping != 0)
+    if (psState->keeping != 0)
       return false;
   }
   return true;
@@ -56,42 +87,40 @@ bool State::satisfied() const& {
 Power State::notDemaned() const& {
   Power res(0);
   for (auto const& psState: psStates)
-    if (psState.ps->pst == PowerSystemType::Consumer)
-      res += psState.ps->capacity - psState.used;
+    if (psState->ps->pst == PowerSystemType::Consumer)
+      res += psState->ps->capacity - psState->used;
   return res;
 }
 
 Power State::fulfilled() const& {
   Power res(0);
   for (auto const& psState: psStates)
-    if (psState.ps->pst == PowerSystemType::Generator)
-      res += psState.used;
+    if (psState->ps->pst == PowerSystemType::Generator)
+      res += psState->used;
   return res;
 }
 
 Power State::needFulfilled() const& {
   Power res(0);
   for (auto const& psState: psStates)
-    if (psState.ps->pst == PowerSystemType::Generator)
-      res += std::max(psState.keeping - psState.fulfillable(), 0_pu);
+    if (psState->ps->pst == PowerSystemType::Generator)
+      res += std::max(psState->keeping - psState->fulfillable(), 0_pu);
   return res;
 }
 
 Power State::keeping() const& {
   Power res(0);
   for (auto const& psState: psStates)
-    res += psState.keeping;
+    res += psState->keeping;
   return res;
 }
 
-State State::demand() const& {
-  State newState(*this);
-  for (auto& psState: newState.psStates)
-    if (psState.ps->pst == PowerSystemType::Consumer) {
-      psState.keeping = psState.ps->capacity;
-      psState.used    = psState.ps->capacity;
+void State::demand() {
+  for (auto psState: psStates)
+    if (psState->ps->pst == PowerSystemType::Consumer) {
+      psState->keeping = psState->ps->capacity;
+      psState->used    = psState->ps->capacity;
     }
-  return newState;
 }
 
 std::vector<State> State::generateNextStates() {
@@ -99,29 +128,31 @@ std::vector<State> State::generateNextStates() {
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
-  for (int i = 0; i < grid->tls.size(); ++i) {
-    Outcome const& outcome = outcomes[grid->tls[i]->id];
-
-    PowerSystem* inp  = grid->tls[i]->inp;
-    PowerSystem* out  = outcome.gen;
-    Percentage   loss = outcome.loss;
-    if (psStates[inp->id].keeping == 0)
+  for (auto tl: grid->tls) {
+    Outcome* outcome = outcomes[tl->id];
+    if (!outcome)
       continue;
+    PowerSystem* inp  = tl->inp;
+    PowerSystem* out  = outcome->gen;
+    Percentage   loss = outcome->loss;
+    if (psStates[inp->id]->keeping == 0) {
+      continue;
+    }
 
-    Power amount =
-        std::min(outcome.fulfillable(psStates), psStates[inp->id].keeping);
+    Power amount = std::min(outcome->fulfillable(), psStates[inp->id]->keeping);
 
     State nextState(*this);
-    nextState.psStates[inp->id].send(amount);
-    nextState.psStates[out->id].receive(amount * loss);
-    nextState.psStates[out->id].fulfill();
+    // TODO: ERROR: fulfill everey tl on the way, not just current tl.
+    nextState.tlStates[tl->id]->transmit(amount);
+    nextState.psStates[inp->id]->send(amount);
+    nextState.psStates[out->id]->receive(amount * loss);
+    nextState.psStates[out->id]->fulfill();
     uniqueStates.insert(nextState);
   }
 
   PLOGD << "NEXT STATES";
-  for (State const& nextState: uniqueStates) {
-    PLOGD << nextState;
-  }
+  for (auto const& state: uniqueStates)
+    PLOGD << state;
 
   return std::vector<State>(
       std::make_move_iterator(uniqueStates.begin()),
@@ -139,16 +170,18 @@ struct LossComparator {
 
 void State::calculateOutcomes() {
   std::priority_queue<PSO, std::vector<PSO>, LossComparator> q;
-  std::vector<Outcome*> bestOutcome(psStates.size(), nullptr);
+  std::vector<Outcome*> bestOutcome(grid->pss.size(), nullptr);
 
   for (auto tl: grid->tls) {
-    if (tl->out->pst != PowerSystemType::Generator)
+    auto gen = tl->out;
+    auto inp = tl->inp;
+    if (gen->pst != PowerSystemType::Generator)
       continue;
-    if (psStates[tl->out->id].fulfillable() == 0)
+    if (psStates[gen->id]->fulfillable() == 0)
       continue;
-    outcomes[tl->id]         = Outcome(tl, tl->out, tl->loss);
-    bestOutcome[tl->inp->id] = &outcomes[tl->id];
-    q.emplace(tl->inp, bestOutcome[tl->inp->id]);
+    outcomes[tl->id]     = new Outcome(this, tl, gen, tl->loss, tl, 100_pct);
+    bestOutcome[inp->id] = outcomes[tl->id];
+    q.emplace(tl->inp, bestOutcome[inp->id]);
   }
 
   while (!q.empty()) {
@@ -158,15 +191,31 @@ void State::calculateOutcomes() {
       continue;
 
     for (TransmissionLine* tl: ps->revAdj) {
-      outcomes[tl->id] = Outcome(tl, outcome->gen, outcome->loss * tl->loss);
+      auto inp = tl->inp;
 
-      if (outcomes[tl->id].fulfillable(psStates) == 0)
+      TransmissionLine* congestedTl     = outcome->congestedTl;
+      Percentage        congestedTlLoss = outcome->congestedTlLoss * tl->loss;
+      if (tl->capacity < congestedTl->capacity / congestedTlLoss) {
+        congestedTl     = tl;
+        congestedTlLoss = 100_pct;
+      }
+      outcomes[tl->id] = new Outcome(
+          this,
+          tl,
+          outcome->gen,
+          outcome->loss * tl->loss,
+          congestedTl,
+          congestedTlLoss,
+          outcome
+      );
+
+      if (outcomes[tl->id]->fulfillable() == 0)
         continue;
 
-      if (bestOutcome[tl->inp->id] == nullptr ||
-          bestOutcome[tl->inp->id]->loss > outcomes[tl->id].loss) {
-        bestOutcome[tl->inp->id] = &outcomes[tl->id];
-        q.emplace(tl->inp, bestOutcome[tl->inp->id]);
+      if (bestOutcome[inp->id] == nullptr ||
+          bestOutcome[inp->id]->loss > outcomes[tl->id]->loss) {
+        bestOutcome[inp->id] = outcomes[tl->id];
+        q.emplace(inp, bestOutcome[inp->id]);
       }
     }
   }
@@ -178,13 +227,15 @@ std::string State::toString() const& {
 
   std::stringstream ss;
   ss << "[";
-  for (PowerSystemState const& psState: psStates) {
-    if (psState.ps->pst != PowerSystemType::Consumer &&
-        psState.ps->pst != PowerSystemType::Generator)
-      continue;
-    ss << fmt::format(stateElementFormat, psState.toString());
+  for (auto psState: psStates) {
+    ss << fmt::format(stateElementFormat, psState->toString());
   }
   ss << "]";
+  // ss << "[";
+  // for (TransmissionLineState const& tlState: tlStates) {
+  //   ss << fmt::format("{:<4}", tlState.toString());
+  // }
+  // ss << "]";
   return ss.str();
 }
 

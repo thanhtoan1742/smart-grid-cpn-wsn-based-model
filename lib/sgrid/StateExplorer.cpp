@@ -57,7 +57,8 @@ void StateExplorer::generateStateSpace() {
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
 
-  initState = initState.demand();
+  initState.demand();
+  PLOGD << "INIT STATE" << initState;
   stateSpace.push_back(std::make_unique<State>(initState));
   q.push(stateSpace.back().get());
   visited.insert(initState);
@@ -134,10 +135,10 @@ std::string StateExplorer::bestStateTraceToString() const& {
   }
   ss << "[";
   for (auto const& psState: bestState->psStates) {
-    if (psState.ps->pst != PowerSystemType::Consumer &&
-        psState.ps->pst != PowerSystemType::Generator)
+    if (psState->ps->pst != PowerSystemType::Consumer &&
+        psState->ps->pst != PowerSystemType::Generator)
       continue;
-    ss << fmt::format(stateElementFormat, psState.ps->id);
+    ss << fmt::format(stateElementFormat, psState->ps->id);
   }
   ss << "]\n";
 

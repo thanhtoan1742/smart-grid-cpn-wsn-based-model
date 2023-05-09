@@ -16,6 +16,7 @@ struct Grid {
   std::vector<TransmissionLine*> tls;
 
   Grid();
+  Grid(Grid const& original);
   Grid(
       std::vector<PowerSystem*> const&      pss,
       std::vector<TransmissionLine*> const& tls

@@ -27,6 +27,17 @@ Grid::Grid(
   }
 }
 
+Grid::Grid(Grid const& other) {
+  for (auto ps: other.pss) {
+    pss.push_back(new PowerSystem(*ps));
+  }
+  for (auto tl: other.tls)
+    tls.push_back(new TransmissionLine(*tl));
+  for (auto tl: tls) {
+    tl->out->revAdj.push_back(tl);
+  }
+}
+
 Grid::~Grid() {
   for (auto ps: pss)
     delete ps;

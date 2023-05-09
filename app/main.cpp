@@ -8,6 +8,8 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
+#include <fmt/core.h>
+#include <fmt/ranges.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
@@ -242,11 +244,13 @@ int main() {
   PLOGD << "\n" << grid.toString();
 
   State state = State(&grid);
-
   // state.calculateOutcomes();
   // PLOGD << "OUTCOME";
-  // for (auto const& outcome: state.outcomes) {
-  //   PLOGD << outcome.toString() << " ";
+  // for (auto outcome: state.outcomes) {
+  //   if (outcome)
+  //     PLOGD << outcome->toString();
+  //   else
+  //     PLOGD << outcome;
   // }
 
   StateExplorer stateExplorer(&grid, state);
