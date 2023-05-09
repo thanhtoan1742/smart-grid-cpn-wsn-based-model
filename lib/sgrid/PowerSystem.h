@@ -2,7 +2,7 @@
 #define SGRID_CARRIER_H
 
 #include <sgrid/Power.h>
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 
 #include <string>
 #include <vector>

@@ -22,12 +22,18 @@
 namespace sgrid {
 
 TEST(TransmissionLine, Simple) {
+  /*
+   * 	   /-----5:0%------G20
+   *   C10
+   *   	 \-----10:100%----G20
+   *
+   */
   Grid grid = GridFactory()
                   .createPowerSystem(0, PowerSystemType::Consumer, 10)
                   .createPowerSystem(1, PowerSystemType::Generator, 20)
                   .createPowerSystem(2, PowerSystemType::Generator, 20)
                   .createTransmissionLine(0, 1, 5, 0)
-                  .createTransmissionLine(0, 2, 10, 100)
+                  .createTransmissionLine(0, 2, 10, 1)
                   .createGrid();
   StateExplorer stateExplorer(&grid, State(&grid));
   stateExplorer.generateStateSpace();

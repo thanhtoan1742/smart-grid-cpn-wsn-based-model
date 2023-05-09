@@ -2,6 +2,8 @@
 
 #include <sgrid/PowerSystem.h>
 
+#include <fmt/core.h>
+
 #include <string>
 
 namespace sgrid {
@@ -36,7 +38,8 @@ Power PowerSystemState::fulfillable() const& {
 }
 
 std::string PowerSystemState::toString() const& {
-  return std::to_string(keeping) + ":" + std::to_string(used);
+  // return std::to_string(keeping) + ":" + std::to_string(used);
+  return fmt::format("{:.2f}:{:.2f}", keeping, used);
 }
 
 } // namespace sgrid

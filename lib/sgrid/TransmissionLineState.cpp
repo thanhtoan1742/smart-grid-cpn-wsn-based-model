@@ -1,6 +1,10 @@
-#include "sgrid/TransmissionLine.h"
-#include "sgrid/Power.h"
+#include <sgrid/TransmissionLine.h>
+
+#include <sgrid/Power.h>
 #include <sgrid/TransmissionLineState.h>
+
+#include <fmt/core.h>
+
 #include <string>
 
 namespace sgrid {
@@ -24,7 +28,7 @@ Power TransmissionLineState::transmittable() const& {
 }
 
 std::string TransmissionLineState::toString() const& {
-  return std::to_string(used);
+  return fmt::format("{:.2f}", used);
 }
 
 } // namespace sgrid

@@ -1,7 +1,7 @@
 #ifndef SGRID_PERCENTAGE_H
 #define SGRID_PERCENTAGE_H
 
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 
 #include <numeric>
 #include <string>
@@ -9,17 +9,14 @@
 namespace sgrid {
 
 struct Percentage {
-  static u64 const base;
+  f64 value;
 
-  u64 value;
-
-  Percentage(u64 value);
+  Percentage(f64 value);
   Percentage operator*(Percentage other);
   Percentage operator+(Percentage other);
 
   bool operator<(Percentage other);
   bool operator>(Percentage other);
-  bool operator==(Percentage other);
 
   std::string toString() const&;
 };

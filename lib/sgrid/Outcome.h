@@ -1,13 +1,13 @@
 #ifndef SGRID_OUTCOME_H
 #define SGRID_OUTCOME_H
 
-#include "sgrid/TransmissionLineState.h"
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
 #include <sgrid/PowerSystem.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
-#include <sgrid/Types.h>
+#include <sgrid/TransmissionLineState.h>
+#include <sgrid/types.h>
 
 namespace sgrid {
 

@@ -3,7 +3,7 @@
 
 #include <sgrid/Percentage.h>
 #include <sgrid/Power.h>
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 
 #include <string>
 

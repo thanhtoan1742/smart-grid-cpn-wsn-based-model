@@ -22,7 +22,7 @@ TransmissionLine::TransmissionLine(
 
 std::string TransmissionLine::toString() const& {
   return fmt::format(
-      "{}->{}({}:{})",
+      "{}->{}({:.2f}:{})",
       inp->id,
       out->id,
       capacity,

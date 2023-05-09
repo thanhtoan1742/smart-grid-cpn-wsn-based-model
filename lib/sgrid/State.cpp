@@ -7,7 +7,7 @@
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/TransmissionLineState.h>
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 #include <sgrid/utils.h>
 
 #include <fmt/core.h>
@@ -82,7 +82,7 @@ bool State::satisfied() const& {
     if (psState->ps->pst == PowerSystemType::Consumer &&
         psState->used < psState->keeping)
       return false;
-    if (psState->keeping != 0)
+    if (psState->keeping != Power::zero)
       return false;
   }
   return true;
@@ -141,7 +141,7 @@ std::vector<State> State::generateNextStates() {
       continue;
     PowerSystem* out  = outcome->gen;
     Percentage   loss = outcome->loss;
-    if (psStates[inp->id]->keeping == 0) {
+    if (psStates[inp->id]->keeping == Power::zero) {
       continue;
     }
 
@@ -164,9 +164,9 @@ std::vector<State> State::generateNextStates() {
     uniqueStates.insert(nextState);
   }
 
-  PLOGD << "NEXT STATES";
-  for (auto const& state: uniqueStates)
-    PLOGD << state;
+  // PLOGD << "NEXT STATES";
+  // for (auto const& state: uniqueStates)
+  //   PLOGD << state;
 
   return std::vector<State>(
       std::make_move_iterator(uniqueStates.begin()),
@@ -191,7 +191,7 @@ void State::calculateOutcomes() {
     auto inp = tl->inp;
     if (gen->pst != PowerSystemType::Generator)
       continue;
-    if (psStates[gen->id]->fulfillable() == 0)
+    if (psStates[gen->id]->fulfillable() == Power::zero)
       continue;
     outcomes[tl->id] =
         new Outcome(this, tl, gen, tl->loss, tl, 100_pct, nullptr);
@@ -224,7 +224,7 @@ void State::calculateOutcomes() {
           outcome
       );
 
-      if (outcomes[tl->id]->fulfillable() == 0)
+      if (outcomes[tl->id]->fulfillable() == Power::zero)
         continue;
 
       if (bestOutcome[inp->id] == nullptr ||
@@ -248,7 +248,7 @@ std::string State::toString() const& {
   ss << "]";
   ss << "[";
   for (auto tlState: tlStates) {
-    ss << fmt::format("{:<4}", tlState->toString());
+    ss << fmt::format("{:<7}", tlState->toString());
   }
   ss << "]";
   return ss.str();

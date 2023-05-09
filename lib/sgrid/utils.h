@@ -3,7 +3,7 @@
 
 namespace sgrid {
 
-static constexpr char const* stateElementFormat = "{:<8}";
+static constexpr char const* stateElementFormat = "{:<14}";
 
 } // namespace sgrid
 #endif // SGRID_UTILS_H

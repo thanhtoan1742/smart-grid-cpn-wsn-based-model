@@ -7,8 +7,10 @@ namespace sgrid {
 
 struct Power {
   static Power const maxPower;
+  static Power const zero;
+  static f64 const   epsilon;
 
-  Power(u64 value = 0);
+  Power(f64 value = 0);
 
   Power operator+(Power const& other) const&;
   Power operator-(Power const& other) const&;
@@ -19,11 +21,12 @@ struct Power {
   void  operator*=(Percentage const& other) &;
 
   bool operator<(Power const& other) const&;
+  bool operator==(Power const& other) const&;
 
-  operator u64() const&;
+  operator f64() const&;
 
 private:
-  u64 value;
+  f64 value;
 };
 
 Power operator""_pu(unsigned long long value);

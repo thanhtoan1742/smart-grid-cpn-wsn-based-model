@@ -17,7 +17,7 @@ PowerSystem::PowerSystem(i32 _id, PowerSystemType _pst, Power _capacity)
 }
 
 std::string PowerSystem::toString() const& {
-  return fmt::format("{}{}:{}", static_cast<char>(pst), id, capacity);
+  return fmt::format("{}{}:{:.2f}", static_cast<char>(pst), id, capacity);
 }
 
 } // namespace sgrid

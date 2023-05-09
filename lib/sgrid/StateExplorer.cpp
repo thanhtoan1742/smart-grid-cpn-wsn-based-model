@@ -1,7 +1,7 @@
 #include <sgrid/StateExplorer.h>
 
 #include <sgrid/State.h>
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 #include <sgrid/utils.h>
 
 #include <fmt/core.h>
