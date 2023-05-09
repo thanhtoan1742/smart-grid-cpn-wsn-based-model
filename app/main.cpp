@@ -239,6 +239,15 @@ int main() {
   //   .createTransmissionLine(0, 2, Power::maxPower, 10)
   //   .createTransmissionLine(1, 3, Power::maxPower, 30)
   //   .createGrid();
+
+
+  // Grid grid = GridFactory()
+  //   .createPowerSystem(0, PowerSystemType::Consumer, 10)
+  //   .createPowerSystem(1, PowerSystemType::Generator, 20)
+  //   .createPowerSystem(2, PowerSystemType::Generator, 20)
+  //   .createTransmissionLine(0, 1, 5, 0)
+  //   .createTransmissionLine(0, 2, 10, 100)
+  //   .createGrid();
   // clang-format on
 
   PLOGD << "\n" << grid.toString();

@@ -34,8 +34,12 @@ State::State(Grid* _grid)
       depth(0),
       parent(nullptr) {
   // TODO: only create state for GEN and CON
-  for (auto ps: grid->pss)
+  for (auto ps: grid->pss) {
+    if (ps->pst != PowerSystemType::Generator &&
+        ps->pst != PowerSystemType::Consumer)
+      continue;
     psStates.push_back(new PowerSystemState(ps));
+  }
   for (auto tl: grid->tls)
     tlStates.push_back(new TransmissionLineState(tl));
 }
@@ -124,7 +128,7 @@ void State::demand() {
 }
 
 std::vector<State> State::generateNextStates() {
-  PLOGD << "GENERATING NEXT STATES";
+  // PLOGD << "GENERATING NEXT STATES";
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
@@ -132,7 +136,9 @@ std::vector<State> State::generateNextStates() {
     Outcome* outcome = outcomes[tl->id];
     if (!outcome)
       continue;
-    PowerSystem* inp  = tl->inp;
+    PowerSystem* inp = tl->inp;
+    if (inp->pst != PowerSystemType::Consumer)
+      continue;
     PowerSystem* out  = outcome->gen;
     Percentage   loss = outcome->loss;
     if (psStates[inp->id]->keeping == 0) {
@@ -142,10 +148,18 @@ std::vector<State> State::generateNextStates() {
     Power amount = std::min(outcome->fulfillable(), psStates[inp->id]->keeping);
 
     State nextState(*this);
-    // TODO: ERROR: fulfill everey tl on the way, not just current tl.
-    nextState.tlStates[tl->id]->transmit(amount);
+
+    Outcome* current = outcome;
+    // PLOGD << " PROCESSING OUTCOME";
     nextState.psStates[inp->id]->send(amount);
-    nextState.psStates[out->id]->receive(amount * loss);
+    while (current != nullptr) {
+      // PLOGD << " TRACING " << current->toString();
+      auto tlState = nextState.tlStates[current->tl->id];
+      tlState->transmit(amount);
+      amount  = amount * current->tl->loss;
+      current = current->trace;
+    }
+    nextState.psStates[out->id]->receive(amount);
     nextState.psStates[out->id]->fulfill();
     uniqueStates.insert(nextState);
   }
@@ -179,7 +193,8 @@ void State::calculateOutcomes() {
       continue;
     if (psStates[gen->id]->fulfillable() == 0)
       continue;
-    outcomes[tl->id]     = new Outcome(this, tl, gen, tl->loss, tl, 100_pct);
+    outcomes[tl->id] =
+        new Outcome(this, tl, gen, tl->loss, tl, 100_pct, nullptr);
     bestOutcome[inp->id] = outcomes[tl->id];
     q.emplace(tl->inp, bestOutcome[inp->id]);
   }
@@ -231,11 +246,11 @@ std::string State::toString() const& {
     ss << fmt::format(stateElementFormat, psState->toString());
   }
   ss << "]";
-  // ss << "[";
-  // for (TransmissionLineState const& tlState: tlStates) {
-  //   ss << fmt::format("{:<4}", tlState.toString());
-  // }
-  // ss << "]";
+  ss << "[";
+  for (auto tlState: tlStates) {
+    ss << fmt::format("{:<4}", tlState->toString());
+  }
+  ss << "]";
   return ss.str();
 }
 

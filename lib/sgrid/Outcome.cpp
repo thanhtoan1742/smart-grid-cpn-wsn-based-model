@@ -52,12 +52,15 @@ Power Outcome::fulfillable() const& {
 
 std::string Outcome::toString() const& {
   return fmt::format(
-      "tl:{}, gen:{}, loss:{}, congestedTl:{}, congestedTlLoss: {}",
+      "{} tl:{}, gen:{}, loss:{}, congestedTl:{}, congestedTlLoss: {} trace: "
+      "{}",
+      fmt::ptr(this),
       tl->toString(),
       gen->toString(),
       loss.toString(),
       congestedTl->toString(),
-      congestedTlLoss.toString()
+      congestedTlLoss.toString(),
+      fmt::ptr(trace)
   );
 }
 
