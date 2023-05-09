@@ -45,7 +45,9 @@ std::string Grid::toString() const& {
 
 GridFactory&
 GridFactory::createPowerSystem(i32 ref, PowerSystemType pst, Power capacity) {
-  assert(ref == ref2ps.size());
+  assert(
+      ref == ref2ps.size()
+  ); // ref have to equal to the number of power system created
   pss.push_back(new PowerSystem(ref, pst, capacity));
   ref2ps.emplace(ref, pss.back());
   return *this;
@@ -54,8 +56,10 @@ GridFactory::createPowerSystem(i32 ref, PowerSystemType pst, Power capacity) {
 GridFactory& GridFactory::createTransmissionLine(
     i32 inpRef, i32 outRef, Power capacity, Percentage loss
 ) {
-  assert(ref2ps.count(inpRef));
-  assert(ref2ps.count(outRef));
+  assert(ref2ps.count(inpRef)
+  ); // have to create power system with inpRef previously
+  assert(ref2ps.count(outRef)
+  ); // have to create power system with outRef previously
   tls.emplace_back(
       new TransmissionLine(0, ref2ps[inpRef], ref2ps[outRef], capacity, loss)
   );
@@ -92,10 +96,21 @@ Grid GridFactory::createGrid() {
     createTransmissionLine(tl->out->id, tl->inp->id, tl->capacity, tl->loss);
   }
 
-  for (int i = 0; i < tls.size(); ++i) {
+  for (i32 i = 0; i < tls.size(); ++i) {
     tls[i]->id   = i;
     tls[i]->loss = tls[i]->loss + 100_pct;
   }
+
+  // for current implementation of State.h, make sure GENs and CONs are at the
+  // beginning.
+  i32 psId = 0;
+  for (auto pst:
+       {PowerSystemType::Consumer,
+        PowerSystemType::Generator,
+        PowerSystemType::Bus})
+    for (auto ps: pss)
+      if (ps->pst == pst)
+        ps->id = psId++;
 
   return Grid(std::move(pss), std::move(tls));
 }
