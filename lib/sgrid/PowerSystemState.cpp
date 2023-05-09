@@ -13,6 +13,7 @@ PowerSystemState::PowerSystemState(
 }
 
 bool PowerSystemState::operator==(PowerSystemState const& other) const& {
+  // TODO: also compare ps == other.ps
   return keeping == other.keeping && used == other.used;
 }
 
