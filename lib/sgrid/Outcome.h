@@ -6,23 +6,38 @@
 #include <sgrid/PowerSystem.h>
 #include <sgrid/PowerSystemState.h>
 #include <sgrid/TransmissionLine.h>
-#include <sgrid/Types.h>
+#include <sgrid/TransmissionLineState.h>
+#include <sgrid/types.h>
 
 namespace sgrid {
 
+struct State;
+
 struct Outcome {
-  Percentage        loss;
-  PowerSystem*      gen;
+  State*            state;
   TransmissionLine* tl;
 
+  PowerSystem*      gen;
+  Percentage        loss;
+  TransmissionLine* congestedTl;
+  Percentage        congestedTlLoss;
+
+  Outcome* trace;
+
   Outcome(
-      Percentage        loss = 0,
-      PowerSystem*      gen  = nullptr,
-      TransmissionLine* tl   = nullptr
+      State*            state,
+      TransmissionLine* tl,
+      PowerSystem*      gen,
+      Percentage        loss,
+      TransmissionLine* congestedTl,
+      Percentage        congestedTlLoss,
+      Outcome*          trace = nullptr
   );
 
-  Power fulfillable(PowerSystemState const& genState) const&;
-  Power fulfillable(std::vector<PowerSystemState> const& psStates) const&;
+  Power fulfillable(
+      PowerSystemState* genState, TransmissionLineState* congestedTlState
+  ) const&;
+  Power fulfillable() const&;
 
   std::string toString() const&;
 };

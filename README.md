@@ -12,6 +12,6 @@ After building with cmake, run the `tests` executable.
 
 ### Export compile command
 ```
-cmake -S . -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
+cmake -S . -B build -G Ninja -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -W no-dev
 cp build/compile_commands.json .
 ```

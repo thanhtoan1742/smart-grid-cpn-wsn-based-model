@@ -4,6 +4,8 @@
 #include <sgrid/TransmissionLine.h>
 #include <sgrid/utils.h>
 
+#include <fmt/core.h>
+
 #include <algorithm>
 #include <limits.h>
 #include <string>
@@ -14,12 +16,8 @@ PowerSystem::PowerSystem(i32 _id, PowerSystemType _pst, Power _capacity)
     : id{_id}, pst{_pst}, capacity{_capacity} {
 }
 
-// void PowerSystem::addRevAdjTransmissionLine(TransmissionLine const& tl) {
-// }
-
 std::string PowerSystem::toString() const& {
-  return std::string(1, static_cast<char>(pst)) + std::to_string(id) + ":" +
-         std::to_string(capacity);
+  return fmt::format("{}{}:{:.2f}", static_cast<char>(pst), id, capacity);
 }
 
 } // namespace sgrid

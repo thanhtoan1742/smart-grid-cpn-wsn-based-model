@@ -1,7 +1,7 @@
 #include <sgrid/StateExplorer.h>
 
 #include <sgrid/State.h>
-#include <sgrid/Types.h>
+#include <sgrid/types.h>
 #include <sgrid/utils.h>
 
 #include <fmt/core.h>
@@ -57,7 +57,8 @@ void StateExplorer::generateStateSpace() {
   std::priority_queue<State*, std::vector<State*>, CompareState> q;
   std::unordered_set<State>                                      visited;
 
-  initState = initState.demand();
+  initState.demand();
+  PLOGD << "INIT STATE" << initState;
   stateSpace.push_back(std::make_unique<State>(initState));
   q.push(stateSpace.back().get());
   visited.insert(initState);
@@ -133,8 +134,12 @@ std::string StateExplorer::bestStateTraceToString() const& {
     current = current->parent;
   }
   ss << "[";
-  for (auto const& psState: bestState->psStates)
-    ss << fmt::format("{:<8}", psState.ps->id);
+  for (auto const& psState: bestState->psStates) {
+    if (psState->ps->pst != PowerSystemType::Consumer &&
+        psState->ps->pst != PowerSystemType::Generator)
+      continue;
+    ss << fmt::format(stateElementFormat, psState->ps->id);
+  }
   ss << "]\n";
 
   return ss.str();
