@@ -39,7 +39,7 @@ void initLogger() {
       5
   );
   static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-  plog::init(plog::debug, &consoleAppender).addAppender(&fileAppender);
+  plog::init(plog::info, &consoleAppender).addAppender(&fileAppender);
   PLOGI << "APP STARTED";
 }
 
@@ -98,7 +98,7 @@ int main() {
   StateExplorer stateExplorer(&grid, state);
   stateExplorer.generateStateSpace();
   // PLOGD << "\n" << stateExplorer.stateSpaceToString();
-  PLOGD << "\n" << stateExplorer.bestStateTraceToString();
-  PLOGD << "Minimum Fulfilled: " << stateExplorer.minFulfilled;
-  PLOGD << "State Space Size: " << stateExplorer.stateSpace.size();
+  PLOGI << "\n" << stateExplorer.bestStateTraceToString();
+  PLOGI << "Minimum Fulfilled: " << stateExplorer.minFulfilled;
+  PLOGI << "State Space Size: " << stateExplorer.stateSpace.size();
 }
