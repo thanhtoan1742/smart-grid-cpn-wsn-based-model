@@ -62,9 +62,12 @@ void StateExplorer::generateStateSpace() {
   stateSpace.push_back(std::make_unique<State>(initState));
   q.push(stateSpace.back().get());
   visited.insert(initState);
-  minFulfilled = Power(std::numeric_limits<u64>::max());
+  minFulfilled = Power::maxPower;
 
   while (!q.empty()) {
+    if (stateSpace.size() % 1000 == 0) {
+      PLOGI << "STATE SPACE SIZE: " << stateSpace.size();
+    }
     State* currentState = q.top();
     q.pop();
     PLOGD << "PROCESSING STATE"

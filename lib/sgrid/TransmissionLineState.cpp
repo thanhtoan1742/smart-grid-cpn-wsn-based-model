@@ -20,6 +20,8 @@ bool TransmissionLineState::operator==(TransmissionLineState const& other
 
 void TransmissionLineState::transmit(Power amount) {
   // TODO: assert amount < tl->cap - used
+  if (tl->capacity == Power::maxPower)
+    return;
   used += amount;
 }
 

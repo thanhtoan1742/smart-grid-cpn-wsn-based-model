@@ -8,7 +8,7 @@
 
 namespace sgrid {
 
-Power const Power::maxPower(1e6);
+Power const Power::maxPower(1e12);
 Power const Power::zero(0);
 f64 const   Power::epsilon = 1e-2;
 

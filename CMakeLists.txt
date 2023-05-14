@@ -42,6 +42,7 @@ add_executable(
   tests/main.cpp
   tests/MinFulfilled.cpp
   tests/TransmissionLine.cpp
+  tests/CaseStudy.cpp
 )
 target_link_libraries(runtests GTest::gtest_main)
 target_link_libraries(runtests libsgrid)
