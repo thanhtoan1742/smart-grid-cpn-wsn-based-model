@@ -10,6 +10,7 @@
 
 #include <fmt/core.h>
 #include <fmt/ranges.h>
+#include "plog/Severity.h"
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
@@ -39,7 +40,7 @@ void initLogger() {
       5
   );
   static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-  plog::init(plog::info, &consoleAppender).addAppender(&fileAppender);
+  plog::init(plog::debug, &consoleAppender).addAppender(&fileAppender);
   PLOGI << "APP STARTED";
 }
 
@@ -47,42 +48,32 @@ int main() {
   initLogger();
 
   Grid grid = GridFactory()
-                  .createPowerSystem(0, PowerSystemType::Consumer, 50)
-                  .createPowerSystem(1, PowerSystemType::Consumer, 50)
-                  .createPowerSystem(2, PowerSystemType::Consumer, 50)
-                  .createPowerSystem(3, PowerSystemType::Bus)
-                  .createPowerSystem(4, PowerSystemType::Bus)
-                  .createPowerSystem(5, PowerSystemType::Bus)
-                  .createPowerSystem(6, PowerSystemType::Bus)
-                  .createPowerSystem(7, PowerSystemType::Generator, 50)
-                  .createPowerSystem(8, PowerSystemType::Generator, 150)
-                  .createPowerSystem(9, PowerSystemType::Generator, 30)
-                  .createTransmissionLine(0, 3, Power::maxPower, 0.01)
-                  .createTransmissionLine(3, 9, 20, 0.02)
-                  .createTransmissionLine(3, 6, Power::maxPower, 0.03)
-                  .createTransmissionLine(1, 4, Power::maxPower, 0.02)
-                  .createTransmissionLine(4, 6, Power::maxPower, 0.01)
-                  .createTransmissionLine(6, 8, Power::maxPower, 0.05)
-                  .createTransmissionLine(4, 5, Power::maxPower, 0.02)
-                  .createTransmissionLine(2, 5, Power::maxPower, 0.04)
-                  .createTransmissionLine(5, 7, 40, 0.01)
+                  .createPowerSystem(0, PowerSystemType::Consumer, 20)
+                  .createPowerSystem(1, PowerSystemType::Bus)
+                  .createPowerSystem(2, PowerSystemType::Bus)
+                  .createPowerSystem(3, PowerSystemType::Generator, 15)
+                  .createPowerSystem(4, PowerSystemType::Generator, 15)
+                  .createTransmissionLine(0, 1, Power::maxPower, 0.02)
+                  .createTransmissionLine(1, 2, 10, 0.01)
+                  .createTransmissionLine(2, 3, Power::maxPower, 0.02)
+                  .createTransmissionLine(1, 4, Power::maxPower, 0.05)
                   .createGrid();
 
   PLOGD << "\n" << grid.toString();
 
   State state = State(&grid);
-  // state.calculateOutcomes();
-  // PLOGD << "OUTCOME";
-  // for (auto outcome: state.outcomes) {
-  //   if (outcome)
-  //     PLOGD << outcome->toString();
-  //   else
-  //     PLOGD << outcome;
-  // }
+  state.calculateOutcomes();
+  PLOGD << "OUTCOME";
+  for (auto outcome: state.outcomes) {
+    if (outcome)
+      PLOGD << outcome->toString() << " " << outcome->fulfillable();
+    else
+      PLOGD << outcome;
+  }
 
   StateExplorer stateExplorer(&grid, state);
   stateExplorer.generateStateSpace();
-  PLOGI << "\n" << stateExplorer.stateSpaceToString();
+  // PLOGI << "\n" << stateExplorer.stateSpaceToString();
   PLOGI << "\nBETS STATE STACK TRACE";
   PLOGI << "\n" << stateExplorer.bestStateTraceToString();
   PLOGI << "Minimum Fulfilled: " << stateExplorer.minFulfilled;

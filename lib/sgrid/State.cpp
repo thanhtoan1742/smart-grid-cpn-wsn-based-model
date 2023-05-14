@@ -34,12 +34,9 @@ State::State(Grid* _grid)
       depth(0),
       parent(nullptr) {
   // TODO: only create state for GEN and CON
-  for (auto ps: grid->pss) {
-    if (ps->pst != PowerSystemType::Generator &&
-        ps->pst != PowerSystemType::Consumer)
-      continue;
+  for (auto ps: grid->pss)
     psStates.push_back(new PowerSystemState(ps));
-  }
+
   for (auto tl: grid->tls)
     tlStates.push_back(new TransmissionLineState(tl));
 }
@@ -132,35 +129,24 @@ std::vector<State> State::generateNextStates() {
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
-  for (auto tl: grid->tls) {
-    Outcome* outcome = outcomes[tl->id];
+  for (auto outcome: bestOutcome) {
     if (!outcome)
       continue;
-    PowerSystem* inp = tl->inp;
-    if (inp->pst != PowerSystemType::Consumer)
-      continue;
-    PowerSystem* out  = outcome->gen;
-    Percentage   loss = outcome->loss;
+    TransmissionLine* tl   = outcome->tl;
+    PowerSystem*      inp  = tl->inp;
+    PowerSystem*      out  = tl->out;
+    Percentage        loss = tl->loss;
     if (psStates[inp->id]->keeping == Power::zero) {
       continue;
     }
 
     Power amount = std::min(outcome->fulfillable(), psStates[inp->id]->keeping);
-
     State nextState(*this);
-
-    Outcome* current = outcome;
-    // PLOGD << " PROCESSING OUTCOME";
     nextState.psStates[inp->id]->send(amount);
-    while (current != nullptr) {
-      // PLOGD << " TRACING " << current->toString();
-      auto tlState = nextState.tlStates[current->tl->id];
-      tlState->transmit(amount);
-      amount  = amount * current->tl->loss;
-      current = current->trace;
-    }
-    nextState.psStates[out->id]->receive(amount);
-    nextState.psStates[out->id]->fulfill();
+    nextState.psStates[out->id]->receive(amount * loss);
+    nextState.tlStates[tl->id]->transmit(amount);
+    if (out->pst == PowerSystemType::Generator)
+      nextState.psStates[out->id]->fulfill();
     uniqueStates.insert(nextState);
   }
 
@@ -184,7 +170,7 @@ struct LossComparator {
 
 void State::calculateOutcomes() {
   std::priority_queue<PSO, std::vector<PSO>, LossComparator> q;
-  std::vector<Outcome*> bestOutcome(grid->pss.size(), nullptr);
+  bestOutcome.resize(grid->pss.size(), nullptr);
 
   for (auto tl: grid->tls) {
     auto gen = tl->out;

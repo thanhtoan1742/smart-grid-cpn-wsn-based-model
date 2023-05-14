@@ -65,9 +65,6 @@ void StateExplorer::generateStateSpace() {
   minFulfilled = Power::maxPower;
 
   while (!q.empty()) {
-    if (stateSpace.size() % 1000 == 0) {
-      PLOGI << "STATE SPACE SIZE: " << stateSpace.size();
-    }
     State* currentState = q.top();
     q.pop();
     PLOGD << "PROCESSING STATE"

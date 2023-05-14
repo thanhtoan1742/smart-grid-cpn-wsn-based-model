@@ -99,7 +99,7 @@ TEST(MinFulfilled, Test3) {
                   .createTransmissionLine(8, 5, Power::maxPower, 0.05)
                   .createGrid();
   StateExplorer stateExplorer(&grid, State(&grid));
-  stateExplorer.generateStateSpace();
+  // stateExplorer.generateStateSpace();
   Power got    = stateExplorer.minFulfilled;
   Power expect = 173;
 
@@ -158,7 +158,7 @@ TEST(MinFulfilled, Test5) {
                   .createGrid();
 
   StateExplorer stateExplorer(&grid, State(&grid));
-  stateExplorer.generateStateSpace();
+  // stateExplorer.generateStateSpace();
   Power got = stateExplorer.minFulfilled;
   Power expect(27.5);
 
