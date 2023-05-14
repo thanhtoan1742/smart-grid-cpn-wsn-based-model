@@ -40,7 +40,7 @@ void initLogger() {
       5
   );
   static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
-  plog::init(plog::debug, &consoleAppender).addAppender(&fileAppender);
+  plog::init(plog::info, &consoleAppender).addAppender(&fileAppender);
   PLOGI << "APP STARTED";
 }
 
@@ -54,7 +54,7 @@ int main() {
                   .createPowerSystem(3, PowerSystemType::Generator, 15)
                   .createPowerSystem(4, PowerSystemType::Generator, 15)
                   .createTransmissionLine(0, 1, Power::maxPower, 0.02)
-                  .createTransmissionLine(1, 2, 10, 0.01)
+                  .createTransmissionLine(1, 2, Power::maxPower, 0.01)
                   .createTransmissionLine(2, 3, Power::maxPower, 0.02)
                   .createTransmissionLine(1, 4, Power::maxPower, 0.05)
                   .createGrid();

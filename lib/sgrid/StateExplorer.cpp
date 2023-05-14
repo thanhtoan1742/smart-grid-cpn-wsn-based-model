@@ -96,6 +96,11 @@ void StateExplorer::generateStateSpace() {
       currentState->children.push_back(nextStatePtr);
       nextStatePtr->parent = currentState;
       nextStatePtr->depth  = currentState->depth + 1;
+
+      if (stateSpace.size() % 1000 == 0) {
+        PLOGI << "STATE SPACE SIZE: " << stateSpace.size() << " "
+              << currentState->keeping() + currentState->fulfilled();
+      }
     }
   }
   PLOGD << "FINISHED GENERATING STATE SPACE";
