@@ -2,11 +2,11 @@ from random import randint, choices, random, expovariate
 import math
 from dataclasses import dataclass
 
-N = 50
-N_GEN = 7
-N_CON = 15
+N = 40
+N_GEN = 5
+N_CON = 12
 N_BUS = N - N_GEN - N_CON
-N_TL_EXTRA = 20
+N_TL_EXTRA = 10
 
 def print_ps(id, typ):
   if typ == "CON":

@@ -21,6 +21,7 @@ struct State {
   std::vector<PowerSystemState*>      psStates;
   std::vector<TransmissionLineState*> tlStates;
   std::vector<Outcome*>               outcomes;
+  std::vector<Outcome*>               bestOutcome;
 
   i32                 depth;
   State*              parent;

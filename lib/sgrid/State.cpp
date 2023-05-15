@@ -132,11 +132,11 @@ std::vector<State> State::generateNextStates() {
   calculateOutcomes();
 
   std::unordered_set<State> uniqueStates;
-  for (auto tl: grid->tls) {
-    Outcome* outcome = outcomes[tl->id];
+  for (auto outcome: bestOutcome) {
     if (!outcome)
       continue;
-    PowerSystem* inp = tl->inp;
+    TransmissionLine* tl  = outcome->tl;
+    PowerSystem*      inp = tl->inp;
     if (inp->pst != PowerSystemType::Consumer)
       continue;
     PowerSystem* out  = outcome->gen;
@@ -184,7 +184,7 @@ struct LossComparator {
 
 void State::calculateOutcomes() {
   std::priority_queue<PSO, std::vector<PSO>, LossComparator> q;
-  std::vector<Outcome*> bestOutcome(grid->pss.size(), nullptr);
+  bestOutcome.resize(grid->pss.size(), nullptr);
 
   for (auto tl: grid->tls) {
     auto gen = tl->out;
